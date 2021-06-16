@@ -10,6 +10,7 @@ class angerNoodler {
         this.lavaButton = $('#lava-button')
         this.shouldReDrawGrid = true;
         this.wallsAreLava = false;
+        this.tickRate = 100;
         this.angryMessages = [
             "the anger noodle is displeased with your success",
             "the anger noodle would prefer that you lose",
@@ -247,7 +248,7 @@ class angerNoodler {
             console.log(this);
             this.refreshGame = setInterval(() => {
                 this.move(this.gameState.direction)
-            }, this.gameState.tickRate);
+            }, this.tickRate);
             this.gameState.gameState = "active";
             $(headSquare).removeClass('pause-head');
             return;
@@ -256,10 +257,10 @@ class angerNoodler {
     updateTickRate() {
         const convertedSpeed = 200 - $("#speed-slider").val();
         console.log(this);
-        this.gameState.tickRate = convertedSpeed;
+        this.tickRate = convertedSpeed;
         if (this.gameState.gameState === "active") {
             clearInterval(this.refreshGame);
-            this.refreshGame = setInterval(() => this.move(this.gameState.direction), this.gameState.tickRate);
+            this.refreshGame = setInterval(() => this.move(this.gameState.direction), this.tickRate);
         }
     }
     startGame() {
@@ -286,7 +287,7 @@ class angerNoodler {
         this.updateScore();
         this.renderSnake();
         this.makeTreat();
-        this.refreshGame = setInterval(() => this.move(this.gameState.direction), this.gameState.tickRate);
+        this.refreshGame = setInterval(() => this.move(this.gameState.direction), this.tickRate);
         this.gameState.gameState = "active";
     }
 }
