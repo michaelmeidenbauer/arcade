@@ -100,7 +100,7 @@ class angerNoodler {
     checkNextMove(nextHeadPosition) {
         const boundary = this.gameState.boundary;
         const direction = this.gameState.direction;
-        const [nextHeadPositionY, nextHeadPositionX] = nextHeadPosition; 
+        const [nextHeadPositionY, nextHeadPositionX] = nextHeadPosition;
         const nextHeadCell = $(this.rows[nextHeadPositionY][nextHeadPositionX]);
         const aboutToHitTopWall = direction === "up" && nextHeadPositionY === boundary;
         const aboutToBottomWall = direction === "down" && nextHeadPositionY === 0;
@@ -110,6 +110,7 @@ class angerNoodler {
             this.gameOver();
         }
         if (nextHeadCell.hasClass("treat")) {
+            nextHeadCell.addClass("segment");
             this.eatTreat();
         }
     }
@@ -170,7 +171,7 @@ class angerNoodler {
         this.renderSnake();
     }
     setControls() {
-        document.onkeydown = function(e) {
+        document.onkeydown = function (e) {
             switch (e.key) {
                 case "ArrowUp": // up
                     angerNoodle.gameState.direction = angerNoodle.gameState.direction != "down" ? "up" : "down";
@@ -183,7 +184,7 @@ class angerNoodler {
                 case "ArrowLeft": // left
                     angerNoodle.gameState.direction = angerNoodle.gameState.direction != "right" ? "left" : "right";
                     break;
- 
+
                 case "ArrowRight": // right
                     angerNoodle.gameState.direction = angerNoodle.gameState.direction != "left" ? "right" : "left";
                     break;
@@ -191,6 +192,12 @@ class angerNoodler {
                 case " ": // spacebar
                     if (angerNoodle.gameState.gameState != "gameOver") {
                         angerNoodle.playPause();
+                    }
+                    break;
+
+                case "Enter": // enter
+                    if (angerNoodle.gameState.gameState === "gameOver") {
+                        angerNoodle.startGame();
                     }
                     break;
 
