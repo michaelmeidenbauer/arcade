@@ -5,6 +5,10 @@
     width: 70vh;
     height: 70vh;
 }
+arcade-cabinet {
+    height: 100 vh;
+    width: auto;
+}
 .message-box {
     display: flex;
     flex-direction: row;
@@ -12,7 +16,7 @@
     align-content: center;
 }
 #anger-noodle {
-    height: 150px;
+    height: 10vh;
     width: auto;
 }
 .snake {
