@@ -16,13 +16,12 @@ class angerNoodler {
       "the anger noodle would prefer that you lose",
       "your pain pleases the anger noodle",
       "how dare you do this to the anger noodle",
-      "stop talking shit about anger noodle",
+      "stop talking smack about anger noodle",
       "angrrrrrrr",
       "y tho",
       "hmmmmmm",
       "send noodles",
       "anger noodle delights in your suffering",
-      "asshole",
       "aw man you suck so baaaaaaaad",
       "everyone sucks but not anger noodle",
       "everyone sucks except for anger noodle",
@@ -31,7 +30,7 @@ class angerNoodler {
       "anger noodle hopes you fail",
       "delicious tears for anger noodle",
       "whoa i just kind of blacked out there for a second",
-      "don't look at anger noodle",
+      "yyyyyyes destroy other kitteh"
     ];
     this.messageCopies = [...this.angryMessages];
     this.startGame = this.startGame.bind(this);
@@ -235,6 +234,10 @@ class angerNoodler {
           }
           break;
 
+          case "F6": // F6
+          console.log(angerNoodle);
+          break;
+
         default:
           return; // exit this handler for other keys
       }
@@ -314,6 +317,7 @@ class angerNoodler {
   }
   startGame() {
     // this = this;
+    $(".message h1").text('"must destroy other kitteh"');
     $(".game-over").hide();
     $(".snake").show();
     $(".cell").attr("class", "cell");
