@@ -1,0 +1,114 @@
+.arcade-display {
+    margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 70vh;
+    height: 70vh;
+}
+.message-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
+#anger-noodle {
+    height: 150px;
+    width: auto;
+}
+.snake {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    border: 3px solid black;
+    /* background-image: url("assets/sydney-face.png");
+    background-repeat: no-repeat;
+    background-size: cover; */
+}
+.lava {
+    border-color: red;
+}
+#lava-button {
+   font-size: large;
+   background-color: black;
+   color: white;
+   border-width: 4px;
+}
+.segment {
+    background-color: transparent;
+}
+.cell {
+    border: 1px solid rgba(154, 150, 150, 0.084);
+}
+.game-over {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+}
+#play-again {
+    width: 20%;
+    margin: auto;
+}
+.treat {
+    background-image: url("assets/uno.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.score {
+    text-align: center;
+}
+.fuzz {
+    width: 100%;
+    height: 100%;
+    background-image: url("assets/sydney-square.png");
+}
+.head {
+    /* width: 100%;
+    height: 100%; */
+    background-image: url("assets/sydney-face.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.up {
+    background-image: url("assets/up.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.down {
+    background-image: url("assets/down.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.left {
+    background-image: url("assets/left.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.right {
+    background-image: url("assets/right.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.difficulty-controls {
+    padding-top: 1%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+}
+.controls-explainer {
+    padding-top: 1%;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+}
+.pause-head {
+    border: red solid 3px;
+}

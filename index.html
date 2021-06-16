@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="arcade.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="global.js" type="module"></script>
+    <script src="angerNoodle.js" type="module"></script>
+    <script src="app.js" type="module" defer></script>
+    <title>ANGER NOODLE</title>
+</head>
+<body>
+    <arcade-cabinet>
+        <div class="score"></div>
+        <div class="message-box">
+            <img src="assets/sydney-face.png" id="anger-noodle"></img>
+            <div class="message"><h1>"must destroy other kitteh"</h1></div>
+        </div>
+        <div class="arcade-display">
+            <div class="snake">
+            </div>
+            <div class="game-over">
+                <h1>GAME OVER</h1>
+                <button id="play-again">Play Again</button>
+            </div>
+        </div>
+        <div class="difficulty-controls">
+            <div>Sleepy Anger Noodle</div>
+            <div class="slider" >
+                <input id="speed-slider" type="range" value="100" min="50" max="150">
+            </div>
+            <div>Turbo Anger Noodle</div>
+        </div>
+        <div class="controls-explainer">
+            <button id="lava-button">
+                💀 Walls are lava 💀
+            </button>
+        </div>
+        <div class="controls-explainer">Move (Arrow keys) Play/Pause (Spacebar)</div>
+    </arcade-cabinet>
+</body>
+</html>

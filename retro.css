@@ -1,0 +1,42 @@
+.arcade-display {
+    margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 1000px;
+    height: 1000px;
+    background-color: azure;
+}
+.snake {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(30, 1fr);
+    grid-template-rows: repeat(30, 1fr);
+    border: 3px solid black;
+}
+.segment {
+    background-color: black;
+}
+.cell {
+    border: 1px solid rgba(154, 150, 150, 0.084);
+}
+.game-over {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+}
+#play-again {
+    width: 20%;
+    margin: auto;
+}
+.treat {
+    background-color: red;
+}
+.score {
+    text-align: center;
+}
