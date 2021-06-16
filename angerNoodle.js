@@ -99,11 +99,14 @@ class angerNoodler {
     }
     checkNextMove(nextHeadPosition) {
         const boundary = this.gameState.boundary;
-        const [nextHeadPositionX, nextHeadPositionY] = nextHeadPosition;
-        const nextHeadCell = $(this.rows[nextHeadPositionX][nextHeadPositionY]);
-        const aboutToHitRightOrBottomWall = (this.gameState.direction === "right" || this.gameState.direction === "down") && (nextHeadPositionX === 0 || nextHeadPositionY === 0);
-        const aboutToHitLeftOrTopWall = (this.gameState.direction === "left" || this.gameState.direction === "up") && (nextHeadPositionX === boundary || nextHeadPositionY === boundary);
-        if (nextHeadCell.hasClass("segment") || this.wallsAreLava && (aboutToHitRightOrBottomWall || aboutToHitLeftOrTopWall)) {
+        const direction = this.gameState.direction;
+        const [nextHeadPositionY, nextHeadPositionX] = nextHeadPosition; 
+        const nextHeadCell = $(this.rows[nextHeadPositionY][nextHeadPositionX]);
+        const aboutToHitTopWall = direction === "up" && nextHeadPositionY === boundary;
+        const aboutToBottomWall = direction === "down" && nextHeadPositionY === 0;
+        const aboutToHitLeftWall = direction === "left" && nextHeadPositionX === boundary;
+        const aboutToHitRightWall = direction === "right" && nextHeadPositionX === 0;
+        if (nextHeadCell.hasClass("segment") || this.wallsAreLava && (aboutToHitTopWall || aboutToBottomWall || aboutToHitLeftWall || aboutToHitRightWall)) {
             this.gameOver();
         }
         if (nextHeadCell.hasClass("treat")) {
