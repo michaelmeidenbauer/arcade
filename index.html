@@ -15,31 +15,56 @@
     <arcade-cabinet>
         <div class="score"></div>
         <div class="message-box">
-            <img src="assets/sydney-face.png" id="anger-noodle"></img>
-            <div class="message"><h1></h1></div>
+            <div class="anger-noodle-message">
+                <img src="assets/sydney-face.png" id="anger-noodle"></img>
+            <h1 class="message"></h1>
+            </div>
         </div>
         <div class="arcade-display">
+            <div class="main-menu">
+                <div class="menu-item-well">
+                    <div class="menu-item">
+                        <h1 class="anger-noodle">aNgEr NoOdLe</h1>
+                        <h4>A game about how my cat is an asshole.</h4>
+                    </div>
+                    <div class="menu-item">
+                        <h1 class="connect-fur-button">Connect Fur</h1>
+                        <h4>It's Connect Four. But with my cats.</h4>
+                    </div>
+                </div>
+            </div>
             <div class="snake">
             </div>
-            <div class="game-over">
+            <div class="connect-fur">
+            </div>
+            <div class="game-over-angerNoodle">
                 <h1>GAME OVER</h1>
                 <h4>The anger noodle commands you to play again (arrow keys/spacebar)</h4>
-                <!-- <button id="play-again">Play Again (Arrow keys or Spacebar)</button> -->
+                <button id="back-to-menu">Back to main menu</button>
             </div>
         </div>
         <div class="difficulty-controls">
-            <div>Sleepy Anger Noodle</div>
+            <div class="anger-noodle-controls">
+                <div>Sleepy Anger Noodle</div>
             <div class="slider" >
                 <input id="speed-slider" type="range" value="100" min="50" max="150">
             </div>
             <div>Turbo Anger Noodle</div>
+            </div>
         </div>
         <div class="controls-explainer">
-            <button id="lava-button">
-                💀 Walls are lava 💀
-            </button>
-        </div>
-        <div class="controls-explainer">Move (Arrow keys) Play/Pause (Spacebar)</div>
+            <div class="anger-noodle-controls">
+                <button id="lava-button">
+                    💀 Walls are lava 💀
+                </button>
+                <!-- <div class="controls-explainer">
+                    <button class="back-to-menu-2">Back to main menu</button>
+                </div> -->
+                <div class="controls-explainer">Move (Arrow keys) Play/Pause (Spacebar)</div>
+            </div>
+            
+            </div>
+            
     </arcade-cabinet>
 </body>
 </html>

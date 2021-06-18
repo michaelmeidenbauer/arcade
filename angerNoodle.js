@@ -3,11 +3,15 @@ class angerNoodler {
     this.name = "angerNoodle";
     this.highScore = 0;
     this.snakeGrid = $(".snake");
-    this.playAgainButton = $("#play-again");
+    this.score = $(".score");
     this.snakeGrid = $(".snake");
-    // this.playAgainButton = $("#play-again");
-    this.gameOverScreen = $(".game-over");
+    this.gameOverScreen = $(".game-over-angerNoodle");
     this.lavaButton = $("#lava-button");
+    this.menuButton = $("#back-to-menu");
+    this.controls = $('.anger-noodle-controls');
+    this.gameMessages = $('.anger-noodle-message');
+    this.message = $('.message');
+    this.speedSlider = $("#speed-slider");
     this.shouldReDrawGrid = true;
     this.wallsAreLava = false;
     this.tickRate = 100;
@@ -39,6 +43,15 @@ class angerNoodler {
     this.gameOver = this.gameOver.bind(this);
     this.setControls = this.setControls.bind(this);
     this.wallsAreLavaSwitcher = this.wallsAreLavaSwitcher.bind(this);
+    this.backToMenu = this.backToMenu.bind(this);
+  }
+  backToMenu () {
+      this.gameMessages.hide();
+      this.controls.hide();
+      this.snakeGrid.hide();
+      this.gameOverScreen.hide();
+      this.score.hide();
+      $('.main-menu').show();
   }
   wallsAreLavaSwitcher() {
     if (!this.wallsAreLava) {
@@ -68,7 +81,7 @@ class angerNoodler {
     };
     let randomIndex = getRandomIndex();
     let splicedMessage = this.messageCopies.splice([randomIndex], 1);
-    $(".message h1").text(`"${splicedMessage}"`);
+    this.message.text(`"${splicedMessage}"`);
     if (this.messageCopies.length === 0) {
       this.messageCopies = [...this.angryMessages];
     }
@@ -243,9 +256,9 @@ class angerNoodler {
       }
       e.preventDefault(); // prevent the default action (scroll / move caret)
     };
-    $("#speed-slider").on("input", angerNoodle.updateTickRate);
-    // $("#play-again").click(angerNoodle.startGame);
+    this.speedSlider.on("input", this.updateTickRate);
     this.lavaButton.click(this.wallsAreLavaSwitcher);
+    this.menuButton.click(this.backToMenu);
   }
   gameOver() {
     $(".cell").attr("class", "cell");
@@ -273,7 +286,7 @@ class angerNoodler {
       this.highScore = this.gameState.currentScore;
     }
     if (!(this.gameState.currentScore % 25)) {
-      $(".message h1").text(
+      this.message.text(
         `"the anger noodle appreciates how you've destroyed other kitteh ${this.gameState.currentScore} times"`
       );
     } else if (!(this.gameState.currentScore % 5)) {
@@ -316,10 +329,12 @@ class angerNoodler {
     }
   }
   startGame() {
-    // this = this;
-    $(".message h1").text('"must destroy other kitteh"');
-    $(".game-over").hide();
-    $(".snake").show();
+    this.message.text('"must destroy other kitteh"');
+    this.gameOverScreen.hide();
+    this.score.show();
+    this.snakeGrid.show();
+    this.controls.show();
+    this.gameMessages.show();
     $(".cell").attr("class", "cell");
     this.gameState = this.setDefaultGameState();
     if (this.shouldReDrawGrid) {
