@@ -14,7 +14,9 @@ class connectFurr {
     this.gameOver = this.gameOver.bind(this);
     this.setControls = this.setControls.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
-    this.gameState = {};
+    this.gameState = {
+      currentPlayer: 'uno'
+    };
   }
   startGame() {
     this.connectFurGrid.show();
@@ -43,6 +45,113 @@ class connectFurr {
     this.rows = this.getRows();
     this.toggleCat = this.toggleCat.bind(this);
   }
+  addToken() {
+    const currentColumn = Number($(this).val());
+    const currentColumnData = connectFur.gameState.columnValues[currentColumn];
+    const currentNumTokens = currentColumnData.length;
+    const inverted = 6 - currentNumTokens;
+    const rowToAdd = connectFur.rows[inverted];
+    const tokenToAdd = rowToAdd[currentColumn];
+    const coords = [inverted, currentColumn];
+    const catClassToAdd = connectFur.gameState.currentPlayer === 'uno' ? 'uno-token' : 'sydney-token';
+    if (currentNumTokens < 6) {
+    currentColumnData.push(connectFur.gameState.currentPlayer);
+    $(tokenToAdd).addClass(catClassToAdd);
+    }
+    connectFur.checkMove(coords);
+    connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
+    
+  }
+  checkMove(currentMove) {
+    const [moveY, moveX] = currentMove;
+    console.log(`Y: ${moveY}, X: ${moveX}`);
+    
+    this.checkHorizontal(moveY);
+    this.checkVertical(moveX);
+  }
+  checkHorizontal(yCoord) {
+    let rowData = [];
+    let consecutive = 0;
+    this.gameState.columnValues.forEach(column => {
+      let yIndex = 6 - yCoord;
+      if (column[yIndex]) {
+        rowData.push(column[yIndex]);
+      } else {
+        rowData.push("");
+      }
+    })
+    rowData.forEach(token => {
+      if (token === this.gameState.currentPlayer){
+        consecutive ++
+      } else {
+        consecutive = 0;
+      }
+      if (consecutive === 4) {
+        console.log(`${this.gameState.currentPlayer} wins!`);
+      }
+    })
+  }
+  checkVertical(xCoord) {
+    let currentColumn = this.gameState.columnValues[xCoord];
+    let consecutive = 0;
+    currentColumn.forEach(token => {
+      if (token === this.gameState.currentPlayer){
+        consecutive ++
+      } else {
+        consecutive = 0;
+      }
+      if (consecutive === 4) {
+        console.log(`${this.gameState.currentPlayer} wins!`);
+      }
+    })
+  }
+    // checkHorizontal(moveX, moveY) {
+  //   let left = this.createLeftHorizontal(moveX, moveY);
+  //   let right = this.createRightHorizontal(moveX, moveY);
+  //   const totalhorizontal = [...left];
+  //   totalhorizontal.push(this.gameState.currentPlayer);
+  //   totalhorizontal.push(...right);
+  //   console.log(totalhorizontal)
+  //   let consecutive = 0;
+  //   totalhorizontal.forEach(token => {
+  //     if (token === this.gameState.currentPlayer){
+  //       consecutive ++
+  //     } else {
+  //       consecutive = 0;
+  //     }
+  //     if (consecutive === 4) {
+  //       console.log(`${this.gameState.currentPlayer} wins!`);
+  //     }
+  //   })
+  // }
+  // createLeftHorizontal(xCoord, yCoord) {
+  //   let horizontal = [];
+  //   const yIndex = 6 - yCoord;
+  //   let i = xCoord > 3 ? 3 : xCoord;
+  //   for (i; i > 0; i--) {
+  //     let tokenToAdd = connectFur.gameState.columnValues[xCoord - i][yIndex];
+  //     if (tokenToAdd) {
+  //       horizontal.push(tokenToAdd);
+  //     } else {
+  //       horizontal.push("");
+  //     }
+  //   }
+  //   return horizontal;
+  // }
+  // createRightHorizontal(xCoord, yCoord) {
+  //   let horizontal = [];
+  //   const yIndex = 6 - yCoord;
+  //   let i = xCoord < 4 ? 3 : 6 - xCoord;
+  //   for (i; i > 0; i--) {
+  //     let tokenToAdd = connectFur.gameState.columnValues[xCoord + i][yIndex];
+  //     if (tokenToAdd) {
+  //       horizontal.push(tokenToAdd);
+  //     } else {
+  //       horizontal.push("");
+  //     }
+  //   }
+  //   return horizontal.reverse();
+  // }
   backToMenu() {
     this.gameMessages.hide();
     this.controls.hide();
@@ -81,20 +190,6 @@ class connectFurr {
     $(".score").text(
       `Current score: ${this.gameState.currentScore} High score: ${this.highScore}`
     );
-  }
-  addToken() {
-    const currentColumn = $(this).val();
-    const currentColumnData = connectFur.gameState.columnValues[currentColumn];
-    const currentNumTokens = currentColumnData.length;
-    const inverted = 6 - currentNumTokens;
-    const rowToAdd = connectFur.rows[inverted];
-    const tokenToAdd = rowToAdd[currentColumn];
-
-    if (currentNumTokens < 6) {
-    currentColumnData.push('uno');
-    $(tokenToAdd).addClass('uno-token');
-    }
-    
   }
   getRows() {
     let rows = [];
