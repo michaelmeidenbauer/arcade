@@ -45,13 +45,13 @@ class angerNoodler {
     this.wallsAreLavaSwitcher = this.wallsAreLavaSwitcher.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
   }
-  backToMenu () {
-      this.gameMessages.hide();
-      this.controls.hide();
-      this.snakeGrid.hide();
-      this.gameOverScreen.hide();
-      this.score.hide();
-      $('.main-menu').show();
+  backToMenu() {
+    this.gameMessages.hide();
+    this.controls.hide();
+    this.snakeGrid.hide();
+    this.gameOverScreen.hide();
+    this.score.hide();
+    $('.main-menu').show();
   }
   wallsAreLavaSwitcher() {
     if (!this.wallsAreLava) {
@@ -122,14 +122,13 @@ class angerNoodler {
       direction === "left" && nextHeadPositionX === boundary;
     const aboutToHitRightWall =
       direction === "right" && nextHeadPositionX === 0;
-    if (
-      nextHeadCell.hasClass("segment") ||
-      (this.wallsAreLava &&
-        (aboutToHitTopWall ||
-          aboutToBottomWall ||
-          aboutToHitLeftWall ||
-          aboutToHitRightWall))
-    ) {
+    const bonk = (this.wallsAreLava &&
+      (aboutToHitTopWall ||
+        aboutToBottomWall ||
+        aboutToHitLeftWall ||
+        aboutToHitRightWall));
+
+    if (nextHeadCell.hasClass("segment") || bonk) {
       this.gameOver();
     }
     if (nextHeadCell.hasClass("treat")) {
@@ -203,7 +202,7 @@ class angerNoodler {
               angerNoodle.gameState.direction != "down" ? "up" : "down";
           }
           if (gameState === "gameOver") {
-              angerNoodle.startGame()
+            angerNoodle.startGame()
           }
 
           break;
@@ -215,7 +214,7 @@ class angerNoodler {
           }
           if (gameState === "gameOver") {
             angerNoodle.startGame()
-        }
+          }
           break;
 
         case "ArrowLeft": // left
@@ -225,7 +224,7 @@ class angerNoodler {
           }
           if (gameState === "gameOver") {
             angerNoodle.startGame()
-        }
+          }
           break;
 
         case "ArrowRight": // right
@@ -235,7 +234,7 @@ class angerNoodler {
           }
           if (gameState === "gameOver") {
             angerNoodle.startGame()
-        }
+          }
           break;
 
         case " ": // spacebar
@@ -247,7 +246,7 @@ class angerNoodler {
           }
           break;
 
-          case "F6": // F6
+        case "F6": // F6
           console.log(angerNoodle);
           break;
 

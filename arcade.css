@@ -54,11 +54,18 @@ arcade-cabinet {
     height: 100%;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(7, 1fr);
     background-color: blue;
     /* background-image: url("assets/sydney-face.png");
     background-repeat: no-repeat;
     background-size: cover; */
+}
+.top-row {
+    background-color: white;
+    border-color: black;
+    border-style: dashed;
+    border-width: 2px;
+    border-radius: 50%;
 }
 .lava {
     border-color: red;
@@ -88,7 +95,21 @@ arcade-cabinet {
     background-image: url('assets/uno.png');
     background-repeat: no-repeat;
     background-size: cover;
+    border-style: inset;
+    border-color: gold;
     border-radius: 80%;
+    border-width: .5vw;
+}
+.sydney-token {
+    background-image: url('assets/sydney-face.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-style: groove;
+    border-radius: 80%;
+    border-style: inset;
+    border-color: red;
+    border-radius: 80%;
+    border-width: .5vw;
 }
 .game-over-angerNoodle {
     display: flex;
