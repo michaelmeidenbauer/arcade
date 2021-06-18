@@ -64,14 +64,13 @@ class connectFurr {
   }
   checkMove(currentMove) {
     const [moveY, moveX] = currentMove;
-    console.log(`Y: ${moveY}, X: ${moveX}`);
-    
     this.checkHorizontal(moveY);
     this.checkVertical(moveX);
+    this.checkTopLeftToBottomRightDiag(moveX, moveY);
+    this.checkBottomLeftToTopRightDiag(moveX, moveY);
   }
   checkHorizontal(yCoord) {
     let rowData = [];
-    let consecutive = 0;
     this.gameState.columnValues.forEach(column => {
       let yIndex = 6 - yCoord;
       if (column[yIndex]) {
@@ -80,21 +79,15 @@ class connectFurr {
         rowData.push("");
       }
     })
-    rowData.forEach(token => {
-      if (token === this.gameState.currentPlayer){
-        consecutive ++
-      } else {
-        consecutive = 0;
-      }
-      if (consecutive === 4) {
-        console.log(`${this.gameState.currentPlayer} wins!`);
-      }
-    })
+    this.checkDataForWin(rowData);
   }
   checkVertical(xCoord) {
     let currentColumn = this.gameState.columnValues[xCoord];
+    this.checkDataForWin(currentColumn);
+  }
+  checkDataForWin(dataArray) {
     let consecutive = 0;
-    currentColumn.forEach(token => {
+    dataArray.forEach(token => {
       if (token === this.gameState.currentPlayer){
         consecutive ++
       } else {
@@ -105,39 +98,86 @@ class connectFurr {
       }
     })
   }
-    // checkHorizontal(moveX, moveY) {
-  //   let left = this.createLeftHorizontal(moveX, moveY);
-  //   let right = this.createRightHorizontal(moveX, moveY);
-  //   const totalhorizontal = [...left];
-  //   totalhorizontal.push(this.gameState.currentPlayer);
-  //   totalhorizontal.push(...right);
-  //   console.log(totalhorizontal)
-  //   let consecutive = 0;
-  //   totalhorizontal.forEach(token => {
-  //     if (token === this.gameState.currentPlayer){
-  //       consecutive ++
-  //     } else {
-  //       consecutive = 0;
-  //     }
-  //     if (consecutive === 4) {
-  //       console.log(`${this.gameState.currentPlayer} wins!`);
-  //     }
-  //   })
-  // }
-  // createLeftHorizontal(xCoord, yCoord) {
-  //   let horizontal = [];
-  //   const yIndex = 6 - yCoord;
-  //   let i = xCoord > 3 ? 3 : xCoord;
-  //   for (i; i > 0; i--) {
-  //     let tokenToAdd = connectFur.gameState.columnValues[xCoord - i][yIndex];
-  //     if (tokenToAdd) {
-  //       horizontal.push(tokenToAdd);
-  //     } else {
-  //       horizontal.push("");
-  //     }
-  //   }
-  //   return horizontal;
-  // }
+  checkTopLeftToBottomRightDiag (xCoord, yCoord){
+    const upperLeftDiag = this.createUpperLeftDiagonal(xCoord, yCoord);
+    const bottomRightDiag = this.createBottomRightDiagonal(xCoord, yCoord);
+    let completeDiag = [...upperLeftDiag];
+    completeDiag.push(this.gameState.currentPlayer);
+    completeDiag.push(...bottomRightDiag);
+    this.checkDataForWin(completeDiag);
+  }
+  checkBottomLeftToTopRightDiag (xCoord, yCoord){
+    const bottomLeftDiag = this.createBottomLeftDiagonal(xCoord, yCoord);
+    const topRightDiag = this.createUpperRightDiagonal(xCoord, yCoord);
+    let completeDiag = [...bottomLeftDiag];
+    completeDiag.push(this.gameState.currentPlayer);
+    completeDiag.push(...topRightDiag);
+    this.checkDataForWin(completeDiag);
+  }
+  createUpperLeftDiagonal(xCoord, yCoord) {
+    let diagonal = [];
+    const yIndex = 6 - yCoord;
+    let x = xCoord > 3 ? 3 : xCoord;
+    while (x > 0) {
+      let tokenToAdd = connectFur.gameState.columnValues[xCoord - x][yIndex + x];
+      if (tokenToAdd) {
+        diagonal.push(tokenToAdd);
+      } else {
+        diagonal.push("");
+      }
+      // y--;
+      x--;
+    }
+    return diagonal;
+  }
+  createBottomRightDiagonal(xCoord, yCoord) {
+    let diagonal = [];
+    const yIndex = 6 - yCoord;
+    let x = xCoord < 4 ? 3 : 6 - xCoord;
+    while (x > 0) {
+      let tokenToAdd = connectFur.gameState.columnValues[xCoord + x][yIndex - x];
+      if (tokenToAdd) {
+        diagonal.push(tokenToAdd);
+      } else {
+        diagonal.push("");
+      }
+      // y--;
+      x--;
+    }
+    return diagonal.reverse();
+  }
+  createUpperRightDiagonal(xCoord, yCoord) {
+    let diagonal = [];
+    const yIndex = 6 - yCoord;
+    let x = xCoord < 4 ? 3 : 6 - xCoord;
+    while (x > 0) {
+      let tokenToAdd = connectFur.gameState.columnValues[xCoord + x][yIndex + x];
+      if (tokenToAdd) {
+        diagonal.push(tokenToAdd);
+      } else {
+        diagonal.push("");
+      }
+      // y--;
+      x--;
+    }
+    return diagonal.reverse();
+  }
+  createBottomLeftDiagonal(xCoord, yCoord) {
+    let diagonal = [];
+    const yIndex = 6 - yCoord;
+    let x = xCoord > 3 ? 3 : xCoord;
+    while (x > 0) {
+      let tokenToAdd = connectFur.gameState.columnValues[xCoord - x][yIndex - x];
+      if (tokenToAdd) {
+        diagonal.push(tokenToAdd);
+      } else {
+        diagonal.push("");
+      }
+      // y--;
+      x--;
+    }
+    return diagonal;
+  }
   // createRightHorizontal(xCoord, yCoord) {
   //   let horizontal = [];
   //   const yIndex = 6 - yCoord;
