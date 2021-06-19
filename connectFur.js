@@ -35,10 +35,10 @@ class connectFurr {
                 `);
       }
       this.preloadImages();
+      this.setControls();
       this.tokenSlots = $(".empty-slot");
       this.rows = this.getRows();
     }
-    this.setControls();
     this.gameState.columnValues = this.setDefaultBoard();
     this.shouldReDrawGrid = false;
     // this.toggleCat = this.toggleCat.bind(this);

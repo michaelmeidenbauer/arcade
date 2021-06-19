@@ -352,8 +352,8 @@ class angerNoodler {
             `);
       }
       this.preloadImages();
+      this.setControls();
     }
-    this.setControls();
     this.shouldReDrawGrid = false;
     this.cells = $(".cell");
     this.rows = this.getRows();
