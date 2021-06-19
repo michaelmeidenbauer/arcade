@@ -1,14 +1,13 @@
 /* body {
-    background-image: url("assets/tv.png");
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: black;
 } */
 .arcade-display {
     margin: auto;
     width: 70vh;
     height: 70vh;
+    box-shadow: 10px 10px 10px #343232;
 }
-arcade-cabinet {
+.arcade-cabinet {
     height: 100 vh;
     width: auto;
 }

@@ -58,7 +58,7 @@ class connectFurr {
     }
     connectFur.checkMove(coords);
     connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
-    
+    console.log(connectFur.gameState.currentPlayer);
   }
   checkMove(currentMove) {
     const [moveY, moveX] = currentMove;
