@@ -179,7 +179,7 @@ class connectFurr {
   backToMenu() {
     this.gameMessages.hide();
     this.controls.hide();
-    this.snakeGrid.hide();
+    this.connectFurGrid.hide();
     this.gameOverScreen.hide();
     this.score.hide();
     $('.main-menu').show();
@@ -224,12 +224,22 @@ class connectFurr {
       let nextRow = copy.splice(0, 7);
       rows.push(nextRow);
     }
-    rows[0].forEach(slot => {
+    rows[0].forEach((slot, index) => {
+      let clickme = [
+        "C",
+        "L",
+        "I",
+        "C",
+        "K",
+        "M",
+        "E"
+      ];
       $(slot)
         .addClass(`top-row`)
         .val(counter)
         .click(this.addToken)
-        .removeClass("empty-slot");
+        .removeClass("empty-slot")
+        .text(clickme[index]);
       counter++;
     })
     return $(rows);
@@ -289,6 +299,10 @@ class connectFurr {
 
         case "F6": // F6
           console.log(connectFur);
+          break;
+
+        case "Escape": // F6
+          connectFur.backToMenu();
           break;
 
         default:

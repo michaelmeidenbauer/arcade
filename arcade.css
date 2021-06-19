@@ -60,11 +60,14 @@
     background-size: cover; */
 }
 .top-row {
-    background-color: white;
+    background-color: rgb(218, 218, 218);
+    color: rgb(104, 103, 103);
     border-color: black;
     border-style: dashed;
     border-width: 2px;
     border-radius: 50%;
+    text-align: center;
+    font-family: monospace;
 }
 .lava {
     border-color: red;
@@ -89,6 +92,10 @@
 .empty-slot {
     background-color: white;
     border-radius: 80%;
+    border-style: outset;
+    border-color: white;
+    /* border-width: thin; */
+    /* border-color: darkblue; */
 }
 .uno-token {
     background-image: url('assets/uno.png');

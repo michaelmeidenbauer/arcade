@@ -49,6 +49,7 @@ class angerNoodler {
     this.gameMessages.hide();
     this.controls.hide();
     this.snakeGrid.hide();
+    this.gameOver();
     this.gameOverScreen.hide();
     this.score.hide();
     $('.main-menu').show();
@@ -248,6 +249,10 @@ class angerNoodler {
 
         case "F6": // F6
           console.log(angerNoodle);
+          break;
+
+          case "Escape": // F6
+          angerNoodle.backToMenu();
           break;
 
         default:
