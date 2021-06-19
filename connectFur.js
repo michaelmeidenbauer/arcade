@@ -39,6 +39,7 @@ class connectFurr {
       this.tokenSlots = $(".empty-slot");
       this.rows = this.getRows();
     }
+    this.rebindEsc();
     this.gameState.columnValues = this.setDefaultBoard();
     this.shouldReDrawGrid = false;
     // this.toggleCat = this.toggleCat.bind(this);
@@ -187,6 +188,18 @@ class connectFurr {
       .addClass('empty-slot');
     $('.main-menu').show();
   }
+  rebindEsc() {
+    document.onkeydown = function (e) {
+      switch (e.key) {
+          case "Escape": // Escape
+          connectFur.backToMenu();
+          break;
+        default:
+          return; // exit this handler for other keys
+      }
+      e.preventDefault(); // prevent the default action (scroll / move caret)
+    };
+  }
   setDefaultBoard() {
     const emptyBoard = [];
     for (let i = 0; i < 7; i++) {
@@ -302,10 +315,6 @@ class connectFurr {
 
         case "F6": // F6
           console.log(connectFur);
-          break;
-
-        case "Escape": // F6
-          connectFur.backToMenu();
           break;
 
         default:

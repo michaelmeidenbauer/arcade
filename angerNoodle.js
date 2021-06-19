@@ -251,10 +251,6 @@ class angerNoodler {
           console.log(angerNoodle);
           break;
 
-          case "Escape": // F6
-          angerNoodle.backToMenu();
-          break;
-
         default:
           return; // exit this handler for other keys
       }
@@ -263,6 +259,18 @@ class angerNoodler {
     this.speedSlider.on("input", this.updateTickRate);
     this.lavaButton.click(this.wallsAreLavaSwitcher);
     this.menuButton.click(this.backToMenu);
+  }
+  rebindEsc() {
+    document.onkeydown = function (e) {
+      switch (e.key) {
+          case "Escape": // Escape
+          angerNoodle.backToMenu();
+          break;
+        default:
+          return; // exit this handler for other keys
+      }
+      e.preventDefault(); // prevent the default action (scroll / move caret)
+    };
   }
   gameOver() {
     $(".cell").attr("class", "cell");
@@ -354,6 +362,7 @@ class angerNoodler {
       this.preloadImages();
       this.setControls();
     }
+    this.rebindEsc();
     this.shouldReDrawGrid = false;
     this.cells = $(".cell");
     this.rows = this.getRows();
