@@ -36,14 +36,15 @@ class connectFurr {
       }
       this.preloadImages();
       this.setControls();
+      this.tokenSlots = $(".empty-slot");
+      this.rows = this.getRows();
     }
     this.gameState.columnValues = this.setDefaultBoard();
     this.shouldReDrawGrid = false;
-    this.tokenSlots = $(".empty-slot");
-    this.rows = this.getRows();
     // this.toggleCat = this.toggleCat.bind(this);
   }
   addToken() {
+    $(this).text('');
     const currentColumn = Number($(this).val());
     const currentColumnData = connectFur.gameState.columnValues[currentColumn];
     const currentNumTokens = currentColumnData.length;
@@ -99,17 +100,15 @@ class connectFurr {
   checkTopLeftToBottomRightDiag (xCoord, yCoord){
     const upperLeftDiag = this.createUpperLeftDiagonal(xCoord, yCoord);
     const bottomRightDiag = this.createBottomRightDiagonal(xCoord, yCoord);
-    let completeDiag = [...upperLeftDiag];
-    completeDiag.push(this.gameState.currentPlayer);
-    completeDiag.push(...bottomRightDiag);
+    let completeDiag = upperLeftDiag.concat(this.gameState.currentPlayer, bottomRightDiag);
+    // console.log('tlbr:', completeDiag);
     this.checkDataForWin(completeDiag);
   }
   checkBottomLeftToTopRightDiag (xCoord, yCoord){
     const bottomLeftDiag = this.createBottomLeftDiagonal(xCoord, yCoord);
     const topRightDiag = this.createUpperRightDiagonal(xCoord, yCoord);
-    let completeDiag = [...bottomLeftDiag];
-    completeDiag.push(this.gameState.currentPlayer);
-    completeDiag.push(...topRightDiag);
+    let completeDiag = bottomLeftDiag.concat(this.gameState.currentPlayer, topRightDiag);
+    // console.log('bltr:', completeDiag);
     this.checkDataForWin(completeDiag);
   }
   createUpperLeftDiagonal(xCoord, yCoord) {
@@ -179,9 +178,13 @@ class connectFurr {
   backToMenu() {
     this.gameMessages.hide();
     this.controls.hide();
-    this.connectFurGrid.hide();
+    $('.connect-fur').hide();
     this.gameOverScreen.hide();
     this.score.hide();
+    this.gameState.columnValues = this.setDefaultBoard();
+    $('.sydney-token, .uno-token')
+      .removeClass()
+      .addClass('empty-slot');
     $('.main-menu').show();
   }
   setDefaultBoard() {

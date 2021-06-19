@@ -9,10 +9,10 @@ $('.connect-fur, .snake, .connect-fur, .anger-noodle-message, .anger-noodle-cont
 
 const mainMenu = $('.main-menu');
 
-$('.anger-noodle').click(function () {
+$('#angerNoodleBox').click(function () {
     launchGame('angerNoodle');
 });
-$('.connect-fur-button').click(function () {
+$('#connectFurBox').click(function () {
     launchGame('connectFur');
 });
 

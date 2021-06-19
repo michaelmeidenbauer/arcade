@@ -21,6 +21,9 @@
     height: 10vh;
     width: auto;
 }
+#anger-noodle:hover {
+    box-shadow: 10px 10px 10px #343232;
+}
 .main-menu {
     width: 100%;
     height: 100%;
@@ -36,6 +39,10 @@
     grid-column: 2 / span 1;
     grid-row: 2 / span 1;
     text-align: center;
+}
+.menu-item:hover {
+    box-shadow: 10px 10px 10px #343232;
+    cursor: pointer;
 }
 .snake {
     width: 100%;
