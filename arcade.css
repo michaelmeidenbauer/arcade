@@ -1,6 +1,3 @@
-/* body {
-    background-color: black;
-} */
 .arcade-display {
     margin: auto;
     width: 70vh;
@@ -15,15 +12,9 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-content: center;
-}
-#anger-noodle {
     height: 10vh;
-    width: auto;
 }
-#anger-noodle:hover {
-    box-shadow: 10px 10px 10px #343232;
-}
+
 .main-menu {
     width: 100%;
     height: 100%;
@@ -44,154 +35,23 @@
     box-shadow: 10px 10px 10px #343232;
     cursor: pointer;
 }
-.snake {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(15, 1fr);
-    grid-template-rows: repeat(15, 1fr);
-    border: 3px solid black;
-    /* background-image: url("assets/sydney-face.png");
-    background-repeat: no-repeat;
-    background-size: cover; */
-}
-.connect-fur {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(7, 1fr);
-    background-color: blue;
-    /* background-image: url("assets/sydney-face.png");
-    background-repeat: no-repeat;
-    background-size: cover; */
-}
-.top-row {
-    background-color: rgb(218, 218, 218);
-    color: rgb(104, 103, 103);
-    border-color: black;
-    border-style: dashed;
-    border-width: 2px;
-    border-radius: 50%;
-    text-align: center;
-    font-family: monospace;
-}
-.lava {
-    border-color: red;
-}
-#lava-button {
-   font-size: large;
-   background-color: black;
-   color: white;
-   border-width: 4px;
-}
-#back-to-menu {
-    width: 5vw;
-    text-align: center;
-    justify-content: center;
-}
-.segment {
-    background-color: transparent;
-}
-.cell {
-    border: 1px solid rgba(154, 150, 150, 0.084);
-}
-.empty-slot {
-    background-color: white;
-    border-radius: 80%;
-    border-style: outset;
-    border-color: white;
-    /* border-width: thin; */
-    /* border-color: darkblue; */
-}
-.uno-token {
-    background-image: url('assets/uno.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-style: inset;
-    border-color: gold;
-    border-radius: 80%;
-    border-width: .5vw;
-}
-.sydney-token {
-    background-image: url('assets/sydney-face.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-style: groove;
-    border-radius: 80%;
-    border-style: inset;
-    border-color: red;
-    border-radius: 80%;
-    border-width: .5vw;
-}
-.game-over-angerNoodle {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    margin: auto;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-    text-align: center;
-}
-#play-again {
-    width: 20%;
-    margin: auto;
-}
-.treat {
-    background-image: url("assets/uno.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.score {
-    text-align: center;
-}
-.fuzz {
-    width: 100%;
-    height: 100%;
-    background-image: url("assets/sydney-square.png");
-}
-.head {
-    /* width: 100%;
-    height: 100%; */
-    background-image: url("assets/sydney-face.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.up {
-    background-image: url("assets/up.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.down {
-    background-image: url("assets/down.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.left {
-    background-image: url("assets/left.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.right {
-    background-image: url("assets/right.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
 .difficulty-controls {
     padding-top: 1%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-direction: column;
+    width: 70vh;
+    margin: auto;
+    text-align: center;
     justify-content: center;
     align-content: center;
 }
 .controls-explainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
     padding-top: 1%;
     text-align: center;
     font-weight: bold;
     font-size: large;
-}
-.pause-head {
-    border: red solid 3px;
 }

@@ -5,7 +5,7 @@ import { connectFur } from "/connectFur.js";
 // angerNoodle.startGame();
 
 //fix this later!
-$('.connect-fur, .snake, .connect-fur, .anger-noodle-message, .anger-noodle-controls, .game-over-angerNoodle').hide();
+$('.connect-fur, .snake, .game-over-angerNoodle').hide();
 
 const mainMenu = $('.main-menu');
 

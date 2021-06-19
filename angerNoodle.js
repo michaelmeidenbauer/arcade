@@ -2,19 +2,12 @@ class angerNoodler {
   constructor() {
     this.name = "angerNoodle";
     this.highScore = 0;
-    this.snakeGrid = $(".snake");
-    this.score = $(".score");
-    this.snakeGrid = $(".snake");
-    this.gameOverScreen = $(".game-over-angerNoodle");
-    this.lavaButton = $("#lava-button");
-    this.menuButton = $("#back-to-menu");
-    this.controls = $('.anger-noodle-controls');
-    this.gameMessages = $('.anger-noodle-message');
-    this.message = $('.message');
-    this.speedSlider = $("#speed-slider");
     this.shouldReDrawGrid = true;
     this.wallsAreLava = false;
     this.tickRate = 100;
+    this.snakeGrid = $(".snake");
+    this.score = $(".score");
+    this.gameOverScreen = $(".game-over-angerNoodle");
     this.angryMessages = [
       "the anger noodle is displeased with your success",
       "the anger noodle would prefer that you lose",
@@ -52,7 +45,41 @@ class angerNoodler {
     this.gameOver();
     this.gameOverScreen.hide();
     this.score.hide();
+    $('.message').hide();
+    $('.controls-explainer').hide();
     $('.main-menu').show();
+  }
+  addDisplayElements() {
+    $('.difficulty-controls').append(`
+            <div class="anger-noodle-controls">
+                <div>Sleepy Anger Noodle</div>
+            <div class="slider" >
+                <input id="speed-slider" type="range" value="100" min="50" max="150">
+            </div>
+            <div>Turbo Anger Noodle</div>
+            </div>
+            <div class="anger-noodle-controls">
+            <button id="lava-button">
+            💀 Walls are lava 💀
+            </button>
+            </div>
+    `);
+    $('.controls-explainer').append(`
+    <div class="controls-explainer">Move (Arrow keys) Play/Pause (Spacebar) Main Menu (ESC)</div>  
+    `);
+    $('.message-box').append(`
+    <div class="anger-noodle-message">
+                <div><img src="assets/sydney-face.png" id="anger-noodle"></img></div>
+                <div><h1 class="message"></h1></div>
+            </div>
+  `);
+    this.message = $('.message');
+    this.message.text('"must destroy other kitteh"');
+    this.lavaButton = $("#lava-button");
+    this.menuButton = $("#back-to-menu");
+    this.controls = $('.anger-noodle-controls');
+    this.gameMessages = $('.anger-noodle-message');
+    this.speedSlider = $("#speed-slider");
   }
   wallsAreLavaSwitcher() {
     console.log(`{
@@ -342,12 +369,6 @@ class angerNoodler {
     }
   }
   startGame() {
-    this.message.text('"must destroy other kitteh"');
-    this.gameOverScreen.hide();
-    this.score.show();
-    this.snakeGrid.show();
-    this.controls.show();
-    this.gameMessages.show();
     $(".cell").attr("class", "cell");
     this.gameState = this.setDefaultGameState();
     if (this.shouldReDrawGrid) {
@@ -361,6 +382,7 @@ class angerNoodler {
             `);
       }
       this.preloadImages();
+      this.addDisplayElements();
       this.setInputs();
     }
     this.setControls();
@@ -378,6 +400,13 @@ class angerNoodler {
       this.tickRate
     );
     this.gameState.gameState = "active";
+    this.gameOverScreen.hide();
+    this.score.show();
+    this.snakeGrid.show();
+    this.controls.show();
+    this.gameMessages.show();
+    $('.message').show();
+    $('.controls-explainer').show();
   }
 }
 export const angerNoodle = new angerNoodler();

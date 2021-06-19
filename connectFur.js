@@ -17,9 +17,28 @@ class connectFurr {
     this.gameState = {
       currentPlayer: 'uno'
     };
+    this.sillyMessages = [
+      "get rekt other kitteh",
+      "the anger noodle would prefer that you lose",
+      "your pain pleases the anger noodle",
+      "how dare you do this to the anger noodle",
+      "i hope we stay friends after this",
+      "dinner later?",
+      "you hear about them new kibbles",
+      "why aren't not cats just cats already",
+      "anger noodle delights in your suffering",
+      "boom roasted",
+      "take that",
+      "checkmate, other kitteh",
+      "hmmmm",
+      "delicious tears for anger noodle",
+      "yyyyyyes destroy other kitteh"
+    ];
+    this.messageCopies = [...this.sillyMessages];
   }
   startGame() {
     this.connectFurGrid.show();
+    this.addDisplayElements();
     this.gameOverScreen.hide();
     // this.score.show();
     // this.controls.show();
@@ -44,8 +63,39 @@ class connectFurr {
     this.shouldReDrawGrid = false;
     // this.toggleCat = this.toggleCat.bind(this);
   }
+  addDisplayElements() {
+    $('.message-box').append(`
+    <div class="connectFur-message">
+                <div id="sydney-connectFur"><img src="assets/sydney-face.png" id="sydney"></img></div>
+                <div id="message-connectFur"><h1>CONNECT FUR</h1></div>
+                <div id="uno-connectFur"><img src="assets/uno.png" id="uno" class="current-player"></img></div>
+            </div>
+  `)
+  }
+  changeActiveCat(currentCat) {
+    const uno = $('#uno');
+    const sydney = $('#sydney');
+    if (currentCat === "uno") {
+      uno.removeClass('current-player');
+      sydney.addClass('current-player');
+    } else {
+      sydney.removeClass('current-player');
+      uno.addClass('current-player');
+    }
+  }
+  getSillyMessage() {
+    const getRandomIndex = () => {
+      return Math.floor(Math.random() * this.messageCopies.length);
+    };
+    let randomIndex = getRandomIndex();
+    let splicedMessage = this.messageCopies.splice([randomIndex], 1);
+    $('#message-connectFur h1').text(`"${splicedMessage}"`);
+    if (this.messageCopies.length === 0) {
+      this.messageCopies = [...this.sillyMessages];
+    }
+  }
   addToken() {
-    $(this).text('');
+    $('.top-row').text('');
     const currentColumn = Number($(this).val());
     const currentColumnData = connectFur.gameState.columnValues[currentColumn];
     const currentNumTokens = currentColumnData.length;
@@ -59,8 +109,9 @@ class connectFurr {
     $(tokenToAdd).addClass(catClassToAdd);
     }
     connectFur.checkMove(coords);
+    connectFur.changeActiveCat(connectFur.gameState.currentPlayer);
+    connectFur.getSillyMessage();
     connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
-    console.log(connectFur.gameState.currentPlayer);
   }
   checkMove(currentMove) {
     const [moveY, moveX] = currentMove;

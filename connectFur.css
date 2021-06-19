@@ -1,0 +1,84 @@
+@keyframes zoom {
+    0% {transform: rotate(-15deg);}
+    50% {transform: rotate(15deg);}
+    100% {transform: rotate(-15deg);}
+  }
+.connect-fur {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    background-color: blue;
+    /* background-image: url("assets/sydney-face.png");
+    background-repeat: no-repeat;
+    background-size: cover; */
+}
+.top-row {
+    background-color: rgb(218, 218, 218);
+    color: rgb(104, 103, 103);
+    border-color: black;
+    border-style: dashed;
+    border-width: 2px;
+    border-radius: 50%;
+    text-align: center;
+    font-family: monospace;
+}
+.empty-slot {
+    background-color: white;
+    border-radius: 80%;
+    border-style: outset;
+    border-color: white;
+    /* border-width: thin; */
+    /* border-color: darkblue; */
+}
+.uno-token {
+    background-image: url('assets/uno.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-style: inset;
+    border-color: gold;
+    border-radius: 80%;
+    border-width: .5vw;
+}
+.sydney-token {
+    background-image: url('assets/sydney-face.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-style: groove;
+    border-radius: 80%;
+    border-style: inset;
+    border-color: red;
+    border-radius: 80%;
+    border-width: .5vw;
+}
+.current-player {
+    animation: zoom 2s infinite;
+    transition-timing-function: linear;
+}
+.connectFur-message {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+    width: 70vh;
+}
+#sydney-connectFur {
+    grid-column: 1 / span 1;
+}
+#sydney-connectFur img {
+    height: 9vh;
+    width: auto;
+}
+#message-connectFur {
+    grid-column: 2 / span 3;
+    text-align: center;
+    font-size: large;
+}
+#uno-connectFur {
+    grid-column: 5 / span 1;
+}
+#uno-connectFur img {
+    height: 9vh;
+    width: auto;
+}
