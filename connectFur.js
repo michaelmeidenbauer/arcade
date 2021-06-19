@@ -24,8 +24,6 @@ class connectFurr {
     // this.score.show();
     // this.controls.show();
     // this.gameMessages.show();
-    // $(".cell").attr("class", "cell");
-    // this.gameState = this.setDefaultGameState();
     if (this.shouldReDrawGrid) {
       for (
         let i = 0;
@@ -43,7 +41,7 @@ class connectFurr {
     this.shouldReDrawGrid = false;
     this.tokenSlots = $(".empty-slot");
     this.rows = this.getRows();
-    this.toggleCat = this.toggleCat.bind(this);
+    // this.toggleCat = this.toggleCat.bind(this);
   }
   addToken() {
     const currentColumn = Number($(this).val());
@@ -178,20 +176,6 @@ class connectFurr {
     }
     return diagonal;
   }
-  // createRightHorizontal(xCoord, yCoord) {
-  //   let horizontal = [];
-  //   const yIndex = 6 - yCoord;
-  //   let i = xCoord < 4 ? 3 : 6 - xCoord;
-  //   for (i; i > 0; i--) {
-  //     let tokenToAdd = connectFur.gameState.columnValues[xCoord + i][yIndex];
-  //     if (tokenToAdd) {
-  //       horizontal.push(tokenToAdd);
-  //     } else {
-  //       horizontal.push("");
-  //     }
-  //   }
-  //   return horizontal.reverse();
-  // }
   backToMenu() {
     this.gameMessages.hide();
     this.controls.hide();
@@ -253,55 +237,55 @@ class connectFurr {
   setControls() {
     document.onkeydown = function (e) {
       switch (e.key) {
-        case "ArrowUp": // up
-          if (gameState === "active" || gameState === "paused") {
-            angerNoodle.gameState.direction =
-              angerNoodle.gameState.direction != "down" ? "up" : "down";
-          }
-          if (gameState === "gameOver") {
-            angerNoodle.startGame()
-          }
+        // case "ArrowUp": // up
+        //   if (gameState === "active" || gameState === "paused") {
+        //     angerNoodle.gameState.direction =
+        //       angerNoodle.gameState.direction != "down" ? "up" : "down";
+        //   }
+        //   if (gameState === "gameOver") {
+        //     angerNoodle.startGame()
+        //   }
 
-          break;
+        //   break;
 
-        case "ArrowDown": // down
-          if (gameState === "active" || gameState === "paused") {
-            angerNoodle.gameState.direction =
-              angerNoodle.gameState.direction != "up" ? "down" : "up";
-          }
-          if (gameState === "gameOver") {
-            angerNoodle.startGame()
-          }
-          break;
+        // case "ArrowDown": // down
+        //   if (gameState === "active" || gameState === "paused") {
+        //     angerNoodle.gameState.direction =
+        //       angerNoodle.gameState.direction != "up" ? "down" : "up";
+        //   }
+        //   if (gameState === "gameOver") {
+        //     angerNoodle.startGame()
+        //   }
+        //   break;
 
-        case "ArrowLeft": // left
-          if (gameState === "active" || gameState === "paused") {
-            angerNoodle.gameState.direction =
-              angerNoodle.gameState.direction != "right" ? "left" : "right";
-          }
-          if (gameState === "gameOver") {
-            angerNoodle.startGame()
-          }
-          break;
+        // case "ArrowLeft": // left
+        //   if (gameState === "active" || gameState === "paused") {
+        //     angerNoodle.gameState.direction =
+        //       angerNoodle.gameState.direction != "right" ? "left" : "right";
+        //   }
+        //   if (gameState === "gameOver") {
+        //     angerNoodle.startGame()
+        //   }
+        //   break;
 
-        case "ArrowRight": // right
-          if (gameState === "active" || gameState === "paused") {
-            angerNoodle.gameState.direction =
-              angerNoodle.gameState.direction != "left" ? "right" : "left";
-          }
-          if (gameState === "gameOver") {
-            angerNoodle.startGame()
-          }
-          break;
+        // case "ArrowRight": // right
+        //   if (gameState === "active" || gameState === "paused") {
+        //     angerNoodle.gameState.direction =
+        //       angerNoodle.gameState.direction != "left" ? "right" : "left";
+        //   }
+        //   if (gameState === "gameOver") {
+        //     angerNoodle.startGame()
+        //   }
+        //   break;
 
-        case " ": // spacebar
-          if (gameState != "gameOver") {
-            angerNoodle.playPause();
-          }
-          if (gameState === "gameOver") {
-            angerNoodle.startGame();
-          }
-          break;
+        // case " ": // spacebar
+        //   if (gameState != "gameOver") {
+        //     angerNoodle.playPause();
+        //   }
+        //   if (gameState === "gameOver") {
+        //     angerNoodle.startGame();
+        //   }
+        //   break;
 
         case "F6": // F6
           console.log(connectFur);
@@ -313,7 +297,6 @@ class connectFurr {
       e.preventDefault(); // prevent the default action (scroll / move caret)
     };
     this.menuButton.click(this.backToMenu);
-    $('.empty-slot').click(connectFur.toggleCat);
   }
   gameOver() {
     $(".token-slot").attr("class", "token-slot");
