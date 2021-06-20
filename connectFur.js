@@ -71,12 +71,9 @@ class connectFurr {
       this.tokenSlots = $(".empty-slot");
       this.rows = this.getRows();
     }
-    $('.sydney-token, .uno-token')
-      .removeClass()
-      .addClass('empty-slot');
+    $('#message-connectFur h1').text("CONNECT FUR");
     $('#sydney').removeClass('current-player');
     $('#uno').addClass('current-player');
-    $('#message-connectFur h1').text("CONNECT FUR");
     this.gameMessages.show();
     this.updateScore();
     this.rebindEscAndF6();
@@ -182,6 +179,10 @@ class connectFurr {
     $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`);
     this.gameState.gameState = "winner";
     this.gameState.scores[this.gameState.currentPlayer]++;
+    this.gameState.currentPlayer = "uno";
+    $('.sydney-token, .uno-token')
+      .removeClass()
+      .addClass('empty-slot');
     this.connectFurGrid.hide();
     this.updateScore();
     this.winScreen.show();
