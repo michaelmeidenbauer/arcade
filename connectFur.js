@@ -7,8 +7,8 @@ class connectFurr {
     this.gameOverScreen = $(".game-over-connectFur");
     this.menuButton = $("#back-to-menu");
     this.controls = $('.connect-fur-controls');
-    this.gameMessages = $('.connect-fur-message');
     this.message = $('.message');
+    this.winScreen = $('.connectFur-winner');
     this.shouldReDrawGrid = true;
     this.startGame = this.startGame.bind(this);
     this.gameOver = this.gameOver.bind(this);
@@ -32,17 +32,24 @@ class connectFurr {
       "checkmate, other kitteh",
       "hmmmm",
       "delicious tears for anger noodle",
-      "yyyyyyes destroy other kitteh"
+      "yyyyyyes destroy other kitteh",
+      "wow. just wow.",
+      "how's that supposed to make me feel",
+      "okay then",
+      "heh",
+      "hoookay",
+      "gReAt MoVe",
+      "you would",
+      "interesting",
+      "you ever think about how we're all just stardust or whatever",
+      "amazing move from kitteh",
+      "indeed",
     ];
     this.messageCopies = [...this.sillyMessages];
   }
   startGame() {
     this.connectFurGrid.show();
-    this.addDisplayElements();
-    this.gameOverScreen.hide();
-    // this.score.show();
-    // this.controls.show();
-    // this.gameMessages.show();
+    this.winScreen.hide();
     if (this.shouldReDrawGrid) {
       for (
         let i = 0;
@@ -53,12 +60,22 @@ class connectFurr {
                 <div class="empty-slot"></div>
                 `);
       }
-      this.preloadImages();
       this.setControls();
+      this.addDisplayElements();
+      this.gameMessages = $('.connectFur-message');
+      this.preloadImages();
       this.tokenSlots = $(".empty-slot");
       this.rows = this.getRows();
     }
+    $('.sydney-token, .uno-token')
+      .removeClass()
+      .addClass('empty-slot');
+    $('#sydney').removeClass('current-player');
+    $('#uno').addClass('current-player');
+    $('#message-connectFur h1').text("CONNECT FUR");
+    this.gameMessages.show();
     this.rebindEscAndF6();
+    this.gameState.gameState = null;
     this.gameState.columnValues = this.setDefaultBoard();
     this.shouldReDrawGrid = false;
     // this.toggleCat = this.toggleCat.bind(this);
@@ -70,7 +87,10 @@ class connectFurr {
                 <div id="message-connectFur"><h1>CONNECT FUR</h1></div>
                 <div id="uno-connectFur"><img src="assets/uno.png" id="uno" class="current-player"></img></div>
             </div>
-  `)
+  `);
+    this.winScreen.append(`
+    <div id="win-message">Play again (Enter) Back to main menu (ESC)</div>
+    `)
   }
   changeActiveCat(currentCat) {
     const uno = $('#uno');
@@ -105,13 +125,16 @@ class connectFurr {
     const coords = [inverted, currentColumn];
     const catClassToAdd = connectFur.gameState.currentPlayer === 'uno' ? 'uno-token' : 'sydney-token';
     if (currentNumTokens < 6) {
-    currentColumnData.push(connectFur.gameState.currentPlayer);
-    $(tokenToAdd).addClass(catClassToAdd);
+      currentColumnData.push(connectFur.gameState.currentPlayer);
+      $(tokenToAdd).addClass(catClassToAdd);
     }
     connectFur.checkMove(coords);
-    connectFur.changeActiveCat(connectFur.gameState.currentPlayer);
-    connectFur.getSillyMessage();
-    connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
+
+    if (connectFur.gameState.gameState != "winner") {
+      connectFur.changeActiveCat(connectFur.gameState.currentPlayer);
+      connectFur.getSillyMessage();
+      connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
+    }
   }
   checkMove(currentMove) {
     const [moveY, moveX] = currentMove;
@@ -139,24 +162,31 @@ class connectFurr {
   checkDataForWin(dataArray) {
     let consecutive = 0;
     dataArray.forEach(token => {
-      if (token === this.gameState.currentPlayer){
-        consecutive ++
+      if (token === this.gameState.currentPlayer) {
+        consecutive++
       } else {
         consecutive = 0;
       }
       if (consecutive === 4) {
-        console.log(`${this.gameState.currentPlayer} wins!`);
+        this.setWinState();
       }
     })
   }
-  checkTopLeftToBottomRightDiag (xCoord, yCoord){
+  setWinState() {
+    console.log("reached");
+    $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`);
+    this.gameState.gameState = "winner";
+    this.connectFurGrid.hide();
+    this.winScreen.show();
+  }
+  checkTopLeftToBottomRightDiag(xCoord, yCoord) {
     const upperLeftDiag = this.createUpperLeftDiagonal(xCoord, yCoord);
     const bottomRightDiag = this.createBottomRightDiagonal(xCoord, yCoord);
     let completeDiag = upperLeftDiag.concat(this.gameState.currentPlayer, bottomRightDiag);
     // console.log('tlbr:', completeDiag);
     this.checkDataForWin(completeDiag);
   }
-  checkBottomLeftToTopRightDiag (xCoord, yCoord){
+  checkBottomLeftToTopRightDiag(xCoord, yCoord) {
     const bottomLeftDiag = this.createBottomLeftDiagonal(xCoord, yCoord);
     const topRightDiag = this.createUpperRightDiagonal(xCoord, yCoord);
     let completeDiag = bottomLeftDiag.concat(this.gameState.currentPlayer, topRightDiag);
@@ -242,11 +272,17 @@ class connectFurr {
   rebindEscAndF6() {
     document.onkeydown = function (e) {
       switch (e.key) {
-          case "Escape": // Escape
+        case "Escape": // Escape
           connectFur.backToMenu();
           break;
-          case "F6": // F6
+        case "F6": // F6
           console.log(connectFur);
+          break;
+        case "Enter": // Enter
+          console.log("haii");
+          if (connectFur.gameState.gameState === "winner") {
+            connectFur.startGame();
+          }
           break;
         default:
           return; // exit this handler for other keys
@@ -376,7 +412,6 @@ class connectFurr {
       }
       e.preventDefault(); // prevent the default action (scroll / move caret)
     };
-    this.menuButton.click(this.backToMenu);
   }
   gameOver() {
     $(".token-slot").attr("class", "token-slot");

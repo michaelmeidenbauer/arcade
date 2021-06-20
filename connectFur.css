@@ -14,6 +14,16 @@
     background-repeat: no-repeat;
     background-size: cover; */
 }
+.connectFur-winner {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 1vw;
+}
 .top-row {
     background-color: rgb(218, 218, 218);
     color: rgb(104, 103, 103);
@@ -73,7 +83,7 @@
 #message-connectFur {
     grid-column: 2 / span 3;
     text-align: center;
-    font-size: large;
+    font-size: .7vw;
 }
 #uno-connectFur {
     grid-column: 5 / span 1;
