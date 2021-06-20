@@ -38,6 +38,7 @@ class angerNoodler {
     this.backToMenu = this.backToMenu.bind(this);
   }
   startGame() {
+    $('.main-menu').hide();
     $(".cell").attr("class", "cell");
     this.gameState = this.setDefaultGameState();
     if (this.shouldReDrawGrid) {

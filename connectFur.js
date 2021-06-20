@@ -50,6 +50,7 @@ class connectFurr {
     this.messageCopies = [...this.sillyMessages];
   }
   startGame() {
+    $('.main-menu').hide();
     if (this.shouldReDrawGrid) {
       this.addDisplayElements();
       for (

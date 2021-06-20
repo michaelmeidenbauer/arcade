@@ -4,20 +4,5 @@ import { connectFur } from "/connectFur.js";
 
 const mainMenu = $('.main-menu');
 
-$('#angerNoodleBox').click(function () {
-    launchGame('angerNoodle');
-});
-$('#connectFurBox').click(function () {
-    launchGame('connectFur');
-});
-
-function launchGame (game) {
-    mainMenu.hide();
-    if (game === "angerNoodle") {
-        angerNoodle.startGame();
-    }
-    if (game === "connectFur") {
-        connectFur.startGame();
-    }
-   
-}
+$('#angerNoodleBox').click(angerNoodle.startGame);
+$('#connectFurBox').click(connectFur.startGame);
