@@ -3,12 +3,10 @@ class connectFurr {
     this.name = "connectFur";
     this.highScore = 0;
     this.score = $(".score");
-    this.connectFurGrid = $(".connect-fur");
-    this.gameOverScreen = $(".game-over-connectFur");
+    this.arcade = $('.arcade-display');
     this.menuButton = $("#back-to-menu");
     this.controls = $('.connect-fur-controls');
     this.message = $('.message');
-    this.winScreen = $('.connectFur-winner');
     this.shouldReDrawGrid = true;
     this.startGame = this.startGame.bind(this);
     this.gameOver = this.gameOver.bind(this);
@@ -52,9 +50,8 @@ class connectFurr {
     this.messageCopies = [...this.sillyMessages];
   }
   startGame() {
-    this.connectFurGrid.show();
-    this.winScreen.hide();
     if (this.shouldReDrawGrid) {
+      this.addDisplayElements();
       for (
         let i = 0;
         i < 49;
@@ -64,8 +61,9 @@ class connectFurr {
                 <div class="empty-slot"></div>
                 `);
       }
+      this.connectFurGrid.show();
+      this.winScreen.hide();
       this.setControls();
-      this.addDisplayElements();
       this.gameMessages = $('.connectFur-message');
       this.preloadImages();
       this.tokenSlots = $(".empty-slot");
@@ -75,6 +73,7 @@ class connectFurr {
     $('#sydney').removeClass('current-player');
     $('#uno').addClass('current-player');
     this.gameMessages.show();
+    this.connectFurGrid.show();
     this.updateScore();
     this.rebindEscAndF6();
     this.gameState.gameState = null;
@@ -90,6 +89,14 @@ class connectFurr {
                 <div id="uno-connectFur"><img src="assets/uno.png" id="uno" class="current-player"></img></div>
             </div>
   `);
+    this.arcade.prepend(`
+    <div class="connect-fur">
+    </div>
+    <div class="connectFur-winner">
+    </div>
+    `);
+    this.connectFurGrid = $(".connect-fur");
+    this.winScreen = $('.connectFur-winner');
     this.winScreen.append(`
     <div id="win-message">Play again (Enter) Back to main menu (ESC)</div>
     `)

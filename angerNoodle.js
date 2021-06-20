@@ -1,13 +1,12 @@
 class angerNoodler {
   constructor() {
     this.name = "angerNoodle";
+    this.arcade = $('.arcade-display');
     this.highScore = 0;
     this.shouldReDrawGrid = true;
     this.wallsAreLava = false;
     this.tickRate = 100;
-    this.snakeGrid = $(".snake");
     this.score = $(".score");
-    this.gameOverScreen = $(".game-over-angerNoodle");
     this.angryMessages = [
       "the anger noodle is displeased with your success",
       "the anger noodle would prefer that you lose",
@@ -38,6 +37,59 @@ class angerNoodler {
     this.wallsAreLavaSwitcher = this.wallsAreLavaSwitcher.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
   }
+  startGame() {
+    $(".cell").attr("class", "cell");
+    this.gameState = this.setDefaultGameState();
+    if (this.shouldReDrawGrid) {
+      this.arcade.append(`
+    <div class="snake">
+            </div>
+    `);
+      this.arcade.append(`
+      <div class="game-over-angerNoodle">
+                <h1>GAME OVER</h1>
+                <h4>The anger noodle commands you to play again (arrow keys/spacebar)</h4>
+                <h4>Back to main menu (ESC)</h4>
+            </div>
+      `);
+      this.snakeGrid = $(".snake");
+      this.gameOverScreen = $(".game-over-angerNoodle");
+      for (
+        let i = 0;
+        i < this.gameState.gridSize * this.gameState.gridSize;
+        i++
+      ) {
+        this.snakeGrid.append(`
+            <div class="cell"></div>
+            `);
+      }
+      this.preloadImages();
+      this.addDisplayElements();
+      this.setInputs();
+    }
+    this.setControls();
+    this.shouldReDrawGrid = false;
+    this.cells = $(".cell");
+    this.rows = this.getRows();
+    this.gameState.head = this.gameState.snake[this.gameState.snake.length - 1];
+    this.gameState.tail = this.gameState.snake[0];
+    this.gameState.boundary = this.gameState.gridSize - 1;
+    this.updateScore();
+    this.renderSnake();
+    this.makeTreat();
+    this.refreshGame = setInterval(
+      () => this.move(this.gameState.direction),
+      this.tickRate
+    );
+    this.gameState.gameState = "active";
+    this.gameOverScreen.hide();
+    this.score.show();
+    this.snakeGrid.show();
+    this.controls.show();
+    this.gameMessages.show();
+    $('.message').show();
+    $('.controls-explainer').show();
+  }
   backToMenu() {
     this.gameMessages.hide();
     this.controls.hide();
@@ -50,6 +102,12 @@ class angerNoodler {
     $('.main-menu').show();
   }
   addDisplayElements() {
+    this.arcade.append(`
+    <div class="difficulty-controls">
+            </div>
+            <div class="controls-explainer">
+            </div>
+    `);
     $('.difficulty-controls').append(`
             <div class="anger-noodle-controls">
                 <div>Sleepy Anger Noodle</div>
@@ -367,46 +425,6 @@ class angerNoodler {
         this.tickRate
       );
     }
-  }
-  startGame() {
-    $(".cell").attr("class", "cell");
-    this.gameState = this.setDefaultGameState();
-    if (this.shouldReDrawGrid) {
-      for (
-        let i = 0;
-        i < this.gameState.gridSize * this.gameState.gridSize;
-        i++
-      ) {
-        this.snakeGrid.append(`
-            <div class="cell"></div>
-            `);
-      }
-      this.preloadImages();
-      this.addDisplayElements();
-      this.setInputs();
-    }
-    this.setControls();
-    this.shouldReDrawGrid = false;
-    this.cells = $(".cell");
-    this.rows = this.getRows();
-    this.gameState.head = this.gameState.snake[this.gameState.snake.length - 1];
-    this.gameState.tail = this.gameState.snake[0];
-    this.gameState.boundary = this.gameState.gridSize - 1;
-    this.updateScore();
-    this.renderSnake();
-    this.makeTreat();
-    this.refreshGame = setInterval(
-      () => this.move(this.gameState.direction),
-      this.tickRate
-    );
-    this.gameState.gameState = "active";
-    this.gameOverScreen.hide();
-    this.score.show();
-    this.snakeGrid.show();
-    this.controls.show();
-    this.gameMessages.show();
-    $('.message').show();
-    $('.controls-explainer').show();
   }
 }
 export const angerNoodle = new angerNoodler();

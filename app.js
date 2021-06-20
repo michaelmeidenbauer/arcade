@@ -2,11 +2,6 @@ import global from "/global.js";
 import { angerNoodle } from "/angerNoodle.js";
 import { connectFur } from "/connectFur.js";
 
-// angerNoodle.startGame();
-
-//fix this later!
-$('.connect-fur, .connectFur-winner, .snake, .game-over-angerNoodle').hide();
-
 const mainMenu = $('.main-menu');
 
 $('#angerNoodleBox').click(function () {
