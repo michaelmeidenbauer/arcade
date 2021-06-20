@@ -82,10 +82,10 @@ class angerNoodler {
     this.speedSlider = $("#speed-slider");
   }
   wallsAreLavaSwitcher() {
-    console.log(`{
-      lava: ${this.wallsAreLava},
-      snakeGrid: ${this.snakeGrid},
-    }`);
+    // console.log(`{
+    //   lava: ${this.wallsAreLava},
+    //   snakeGrid: ${this.snakeGrid},
+    // }`);
     if (!this.wallsAreLava) {
       this.snakeGrid.addClass("lava");
       this.lavaButton.addClass("lava");

@@ -15,7 +15,11 @@ class connectFurr {
     this.setControls = this.setControls.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
     this.gameState = {
-      currentPlayer: 'uno'
+      currentPlayer: 'uno',
+      scores: {
+        uno: 0,
+        sydney: 0
+      }
     };
     this.sillyMessages = [
       "get rekt other kitteh",
@@ -74,6 +78,7 @@ class connectFurr {
     $('#uno').addClass('current-player');
     $('#message-connectFur h1').text("CONNECT FUR");
     this.gameMessages.show();
+    this.updateScore();
     this.rebindEscAndF6();
     this.gameState.gameState = null;
     this.gameState.columnValues = this.setDefaultBoard();
@@ -173,10 +178,12 @@ class connectFurr {
     })
   }
   setWinState() {
-    console.log("reached");
+    console.log(this.gameState.currentPlayer);
     $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`);
     this.gameState.gameState = "winner";
+    this.gameState.scores[this.gameState.currentPlayer]++;
     this.connectFurGrid.hide();
+    this.updateScore();
     this.winScreen.show();
   }
   checkTopLeftToBottomRightDiag(xCoord, yCoord) {
@@ -260,6 +267,7 @@ class connectFurr {
   backToMenu() {
     this.gameMessages.hide();
     this.controls.hide();
+    this.score.hide();
     $('.connect-fur').hide();
     this.winScreen.hide();
     this.score.hide();
@@ -317,8 +325,9 @@ class connectFurr {
     });
   }
   updateScore() {
-    $(".score").text(
-      `Current score: ${this.gameState.currentScore} High score: ${this.highScore}`
+    this.score.show();
+    this.score.text(
+      `${this.gameState.scores.sydney} | ${this.gameState.scores.uno}`
     );
   }
   getRows() {
