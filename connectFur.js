@@ -261,7 +261,7 @@ class connectFurr {
     this.gameMessages.hide();
     this.controls.hide();
     $('.connect-fur').hide();
-    this.gameOverScreen.hide();
+    this.winScreen.hide();
     this.score.hide();
     this.gameState.columnValues = this.setDefaultBoard();
     $('.sydney-token, .uno-token')
