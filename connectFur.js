@@ -71,13 +71,17 @@ class connectFurr {
       this.rows = this.getRows();
     }
     $('#message-connectFur h1').text("CONNECT FUR");
+    this.gameState.currentPlayer = "uno";
+    $('.sydney-token, .uno-token')
+      .removeClass()
+      .addClass('empty-slot');
     $('#sydney').removeClass('current-player');
     $('#uno').addClass('current-player');
     this.gameMessages.show();
     this.connectFurGrid.show();
     this.updateScore();
     this.rebindEscAndF6();
-    this.gameState.gameState = null;
+    this.gameState.gameState = "active";
     this.gameState.columnValues = this.setDefaultBoard();
     this.shouldReDrawGrid = false;
     // this.toggleCat = this.toggleCat.bind(this);
@@ -125,6 +129,9 @@ class connectFurr {
     }
   }
   addToken() {
+    if (connectFur.gameState.gameState === "winner") {
+      return;
+    }
     $('.top-row').text('');
     const currentColumn = Number($(this).val());
     const currentColumnData = connectFur.gameState.columnValues[currentColumn];
@@ -154,59 +161,62 @@ class connectFurr {
     this.checkBottomLeftToTopRightDiag(moveX, moveY);
   }
   checkHorizontal(yCoord) {
-    let rowData = [];
-    this.gameState.columnValues.forEach(column => {
-      let yIndex = 6 - yCoord;
-      if (column[yIndex]) {
-        rowData.push(column[yIndex]);
-      } else {
-        rowData.push("");
-      }
-    })
+    let rowData = this.rows[yCoord];
+    console.log(rowData);
     this.checkDataForWin(rowData);
   }
   checkVertical(xCoord) {
-    let currentColumn = this.gameState.columnValues[xCoord];
+    let currentColumn = [];
+    console.log(this.rows);
+    for (const row of this.rows) {
+      currentColumn.push(row[xCoord])
+    }
+    console.log(currentColumn);
     this.checkDataForWin(currentColumn);
   }
   checkDataForWin(dataArray) {
     let consecutive = 0;
+    let consecutiveArray = [];
     dataArray.forEach(token => {
-      if (token === this.gameState.currentPlayer) {
-        consecutive++
+      let JQToken = $(token);
+      console.log(JQToken.attr('class'));
+      if (JQToken.hasClass(`${this.gameState.currentPlayer}-token`)) {
+        consecutive++;
+        consecutiveArray.push(JQToken);
       } else {
         consecutive = 0;
+        consecutiveArray = [];
       }
+      console.log("consecutive array: ", consecutiveArray);
       if (consecutive === 4) {
-        this.setWinState();
+        this.setWinState(consecutiveArray);
       }
     })
   }
-  setWinState() {
+  setWinState(winningArray) {
     console.log(this.gameState.currentPlayer);
+    winningArray.forEach(token => token.addClass('winning-token'));
     $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`);
     this.gameState.gameState = "winner";
     this.gameState.scores[this.gameState.currentPlayer]++;
-    this.gameState.currentPlayer = "uno";
-    $('.sydney-token, .uno-token')
-      .removeClass()
-      .addClass('empty-slot');
-    this.connectFurGrid.hide();
     this.updateScore();
-    this.winScreen.show();
+    // this.connectFurGrid.hide();
+    // this.winScreen.show();
   }
   checkTopLeftToBottomRightDiag(xCoord, yCoord) {
+    const yIndex = 6 - yCoord;
+    const currentMove = $(`#${yIndex}${xCoord}`);
     const upperLeftDiag = this.createUpperLeftDiagonal(xCoord, yCoord);
     const bottomRightDiag = this.createBottomRightDiagonal(xCoord, yCoord);
-    let completeDiag = upperLeftDiag.concat(this.gameState.currentPlayer, bottomRightDiag);
-    // console.log('tlbr:', completeDiag);
+    let completeDiag = upperLeftDiag.concat(currentMove, bottomRightDiag);
     this.checkDataForWin(completeDiag);
   }
   checkBottomLeftToTopRightDiag(xCoord, yCoord) {
+    const yIndex = 6 - yCoord;
+    const currentMove = $(`#${yIndex}${xCoord}`);
     const bottomLeftDiag = this.createBottomLeftDiagonal(xCoord, yCoord);
     const topRightDiag = this.createUpperRightDiagonal(xCoord, yCoord);
-    let completeDiag = bottomLeftDiag.concat(this.gameState.currentPlayer, topRightDiag);
-    // console.log('bltr:', completeDiag);
+    let completeDiag = bottomLeftDiag.concat(currentMove, topRightDiag);
     this.checkDataForWin(completeDiag);
   }
   createUpperLeftDiagonal(xCoord, yCoord) {
@@ -214,7 +224,8 @@ class connectFurr {
     const yIndex = 6 - yCoord;
     let x = xCoord > 3 ? 3 : xCoord;
     while (x > 0) {
-      let tokenToAdd = connectFur.gameState.columnValues[xCoord - x][yIndex + x];
+      const tokenSelector = `#${yIndex + x}${xCoord - x}`;
+      let tokenToAdd = $(tokenSelector);
       if (tokenToAdd) {
         diagonal.push(tokenToAdd);
       } else {
@@ -223,6 +234,7 @@ class connectFurr {
       // y--;
       x--;
     }
+    console.log(diagonal);
     return diagonal;
   }
   createBottomRightDiagonal(xCoord, yCoord) {
@@ -230,7 +242,8 @@ class connectFurr {
     const yIndex = 6 - yCoord;
     let x = xCoord < 4 ? 3 : 6 - xCoord;
     while (x > 0) {
-      let tokenToAdd = connectFur.gameState.columnValues[xCoord + x][yIndex - x];
+      const tokenSelector = `#${yIndex - x}${xCoord + x}`;
+      let tokenToAdd = $(tokenSelector);
       if (tokenToAdd) {
         diagonal.push(tokenToAdd);
       } else {
@@ -246,7 +259,8 @@ class connectFurr {
     const yIndex = 6 - yCoord;
     let x = xCoord < 4 ? 3 : 6 - xCoord;
     while (x > 0) {
-      let tokenToAdd = connectFur.gameState.columnValues[xCoord + x][yIndex + x];
+      const tokenSelector = `#${yIndex + x}${xCoord + x}`;
+      let tokenToAdd = $(tokenSelector);
       if (tokenToAdd) {
         diagonal.push(tokenToAdd);
       } else {
@@ -262,7 +276,8 @@ class connectFurr {
     const yIndex = 6 - yCoord;
     let x = xCoord > 3 ? 3 : xCoord;
     while (x > 0) {
-      let tokenToAdd = connectFur.gameState.columnValues[xCoord - x][yIndex - x];
+      const tokenSelector = `#${yIndex - x}${xCoord - x}`;
+      let tokenToAdd = $(tokenSelector);
       if (tokenToAdd) {
         diagonal.push(tokenToAdd);
       } else {
@@ -341,13 +356,18 @@ class connectFurr {
   }
   getRows() {
     let rows = [];
-    let counter = 0;
+    let columnCounter = 0;
     console.log(this);
     let copy = [...this.tokenSlots];
     while (copy.length > 0) {
       let nextRow = copy.splice(0, 7);
+      nextRow.forEach((token, index) => {
+        $(token).attr("id", `${6 - columnCounter}${index}`);
+      })
       rows.push(nextRow);
+      columnCounter++;
     }
+    let counter = 0;
     rows[0].forEach((slot, index) => {
       let clickme = [
         "C",
