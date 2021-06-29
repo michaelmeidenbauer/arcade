@@ -196,7 +196,7 @@ class connectFurr {
   setWinState(winningArray) {
     console.log(this.gameState.currentPlayer);
     winningArray.forEach(token => token.addClass('winning-token'));
-    $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`);
+    $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins! Restart (Enter)`);
     this.gameState.gameState = "winner";
     this.gameState.scores[this.gameState.currentPlayer]++;
     this.updateScore();
