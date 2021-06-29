@@ -72,6 +72,7 @@ class connectFurr {
     }
     $('#message-connectFur h1').text("CONNECT FUR");
     this.gameState.currentPlayer = "uno";
+    this.restart.hide();
     $('.sydney-token, .uno-token')
       .removeClass()
       .addClass('empty-slot');
@@ -105,6 +106,8 @@ class connectFurr {
     this.winScreen.append(`
     <div id="win-message">Play again (Enter) Back to main menu (ESC)</div>
     `)
+    $('#message-connectFur').append(`<h4 id="restart">Play Again (Enter)</h4)`);
+    this.restart = $('#restart');
   }
   changeActiveCat(currentCat) {
     const uno = $('#uno');
@@ -196,10 +199,11 @@ class connectFurr {
   setWinState(winningArray) {
     console.log(this.gameState.currentPlayer);
     winningArray.forEach(token => token.addClass('winning-token'));
-    $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins! Restart (Enter)`);
+    $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`)
     this.gameState.gameState = "winner";
     this.gameState.scores[this.gameState.currentPlayer]++;
     this.updateScore();
+    this.restart.show();
     // this.connectFurGrid.hide();
     // this.winScreen.show();
   }
