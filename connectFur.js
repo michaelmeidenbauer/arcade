@@ -12,6 +12,7 @@ class connectFurr {
     this.gameOver = this.gameOver.bind(this);
     this.setControls = this.setControls.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
+    this.aiTurn = this.aiTurn.bind(this);
     this.gameState = {
       currentPlayer: 'uno',
       scores: {
@@ -131,7 +132,39 @@ class connectFurr {
       this.messageCopies = [...this.sillyMessages];
     }
   }
+  aiTurn() {
+    console.log("ai turn is running");
+    const topRow = $('.top-row');
+    const randomIndex = Math.ceil(Math.random() * 7);
+    let returnWouldWin = false;
+    let returnWinningArray = [];
+    let columnToPlay;
+    for (let i = 0; i < 7; i++) {
+      const currentColumn = i;
+      const currentColumnData = connectFur.gameState.columnValues[currentColumn];
+      const currentNumTokens = currentColumnData.length;
+      const inverted = 6 - currentNumTokens;
+      const coords = [inverted, currentColumn];
+      const { wouldWin, winningArray } = this.checkMove(coords, true);
+      console.log(`{
+        wouldWin: ${wouldWin},
+        winningArray: ${winningArray},
+        columnToPlay: ${currentColumn}
+      }`);
+      if (wouldWin) {
+        console.log(`{
+          wouldWin: ${wouldWin},
+          winningArray: ${winningArray},
+          columnToPlay: ${columnToPlay}
+        }`)
+        break;
+      } else {
+       continue;
+      }
+    }
+  }
   addToken() {
+    connectFur.aiTurn();
     if (connectFur.gameState.gameState === "winner") {
       return;
     }
@@ -143,12 +176,13 @@ class connectFurr {
     const rowToAdd = connectFur.rows[inverted];
     const tokenToAdd = rowToAdd[currentColumn];
     const coords = [inverted, currentColumn];
+    console.log("played coords ", coords);
     const catClassToAdd = connectFur.gameState.currentPlayer === 'uno' ? 'uno-token' : 'sydney-token';
     if (currentNumTokens < 6) {
       currentColumnData.push(connectFur.gameState.currentPlayer);
       $(tokenToAdd).addClass(catClassToAdd);
     }
-    const {wouldWin, winningArray} = connectFur.checkMove(coords);
+    const { wouldWin, winningArray } = connectFur.checkMove(coords);
     if (wouldWin) {
       connectFur.setWinState(winningArray);
     }
@@ -159,22 +193,25 @@ class connectFurr {
       connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
     }
   }
-  checkMove(currentMove) {
+  checkMove(currentMove, thing) {
+    if (thing) {
+      console.log("reached from aiTurn function");
+    }
     let winningArray = [];
     let wouldWin = false;
     const [moveY, moveX] = currentMove;
     const checkHorizontal = yCoord => {
       let rowData = this.rows[yCoord];
-      console.log(rowData);
+      // console.log(rowData);
       checkDataForWin(rowData);
     }
     const checkVertical = xCoord => {
       let currentColumn = [];
-      console.log(this.rows);
+      // console.log(this.rows);
       for (const row of this.rows) {
         currentColumn.push(row[xCoord])
       }
-      console.log(currentColumn);
+      // console.log(currentColumn);
       checkDataForWin(currentColumn);
     }
     const checkTopLeftToBottomRightDiag = (xCoord, yCoord) => {
@@ -208,7 +245,7 @@ class connectFurr {
         // y--;
         x--;
       }
-      console.log(diagonal);
+      // console.log(diagonal);
       return diagonal;
     }
     const createBottomRightDiagonal = (xCoord, yCoord) => {
@@ -267,7 +304,7 @@ class connectFurr {
       let consecutiveArray = [];
       dataArray.forEach(token => {
         let JQToken = $(token);
-        console.log(JQToken.attr('class'));
+        // console.log(JQToken.attr('class'));
         if (JQToken.hasClass(`${this.gameState.currentPlayer}-token`)) {
           consecutive++;
           consecutiveArray.push(JQToken);
@@ -275,7 +312,7 @@ class connectFurr {
           consecutive = 0;
           consecutiveArray = [];
         }
-        console.log("consecutive array: ", consecutiveArray);
+        // console.log("consecutive array: ", consecutiveArray);
         if (consecutive === 4) {
           winningArray.push(...consecutiveArray);
           wouldWin = true
@@ -286,22 +323,19 @@ class connectFurr {
     checkVertical(moveX);
     checkTopLeftToBottomRightDiag(moveX, moveY);
     checkBottomLeftToTopRightDiag(moveX, moveY);
-    console.log("would win: ", wouldWin);
     return {
       wouldWin: wouldWin,
       winningArray: winningArray
     }
   }
   setWinState(winningArray) {
-    console.log(this.gameState.currentPlayer);
+    // console.log(this.gameState.currentPlayer);
     winningArray.forEach(token => token.addClass('winning-token'));
     $('#message-connectFur h1').text(`${this.gameState.currentPlayer} wins!`)
     this.gameState.gameState = "winner";
     this.gameState.scores[this.gameState.currentPlayer]++;
     this.updateScore();
     this.restart.show();
-    // this.connectFurGrid.hide();
-    // this.winScreen.show();
   }
   backToMenu() {
     this.gameMessages.hide();
@@ -323,10 +357,10 @@ class connectFurr {
           connectFur.backToMenu();
           break;
         case "F6": // F6
-          console.log(connectFur);
+          // console.log(connectFur);
           break;
         case "Enter": // Enter
-          console.log("haii");
+          // console.log("haii");
           if (connectFur.gameState.gameState === "winner") {
             connectFur.startGame();
           }
@@ -372,7 +406,7 @@ class connectFurr {
   getRows() {
     let rows = [];
     let columnCounter = 0;
-    console.log(this);
+    // console.log(this);
     let copy = [...this.tokenSlots];
     while (copy.length > 0) {
       let nextRow = copy.splice(0, 7);
@@ -459,7 +493,6 @@ class connectFurr {
         case "F6": // F6
           console.log(connectFur);
           break;
-
         default:
           return; // exit this handler for other keys
       }
