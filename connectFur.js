@@ -148,7 +148,10 @@ class connectFurr {
       currentColumnData.push(connectFur.gameState.currentPlayer);
       $(tokenToAdd).addClass(catClassToAdd);
     }
-    connectFur.checkMove(coords);
+    const {wouldWin, winningArray} = connectFur.checkMove(coords);
+    if (wouldWin) {
+      connectFur.setWinState(winningArray);
+    }
 
     if (connectFur.gameState.gameState != "winner") {
       connectFur.changeActiveCat(connectFur.gameState.currentPlayer);
@@ -157,44 +160,137 @@ class connectFurr {
     }
   }
   checkMove(currentMove) {
+    let winningArray = [];
+    let wouldWin = false;
     const [moveY, moveX] = currentMove;
-    this.checkHorizontal(moveY);
-    this.checkVertical(moveX);
-    this.checkTopLeftToBottomRightDiag(moveX, moveY);
-    this.checkBottomLeftToTopRightDiag(moveX, moveY);
-  }
-  checkHorizontal(yCoord) {
-    let rowData = this.rows[yCoord];
-    console.log(rowData);
-    this.checkDataForWin(rowData);
-  }
-  checkVertical(xCoord) {
-    let currentColumn = [];
-    console.log(this.rows);
-    for (const row of this.rows) {
-      currentColumn.push(row[xCoord])
+    const checkHorizontal = yCoord => {
+      let rowData = this.rows[yCoord];
+      console.log(rowData);
+      checkDataForWin(rowData);
     }
-    console.log(currentColumn);
-    this.checkDataForWin(currentColumn);
-  }
-  checkDataForWin(dataArray) {
-    let consecutive = 0;
-    let consecutiveArray = [];
-    dataArray.forEach(token => {
-      let JQToken = $(token);
-      console.log(JQToken.attr('class'));
-      if (JQToken.hasClass(`${this.gameState.currentPlayer}-token`)) {
-        consecutive++;
-        consecutiveArray.push(JQToken);
-      } else {
-        consecutive = 0;
-        consecutiveArray = [];
+    const checkVertical = xCoord => {
+      let currentColumn = [];
+      console.log(this.rows);
+      for (const row of this.rows) {
+        currentColumn.push(row[xCoord])
       }
-      console.log("consecutive array: ", consecutiveArray);
-      if (consecutive === 4) {
-        this.setWinState(consecutiveArray);
+      console.log(currentColumn);
+      checkDataForWin(currentColumn);
+    }
+    const checkTopLeftToBottomRightDiag = (xCoord, yCoord) => {
+      const yIndex = 6 - yCoord;
+      const currentMove = $(`#${yIndex}${xCoord}`);
+      const upperLeftDiag = createUpperLeftDiagonal(xCoord, yCoord);
+      const bottomRightDiag = createBottomRightDiagonal(xCoord, yCoord);
+      let completeDiag = upperLeftDiag.concat(currentMove, bottomRightDiag);
+      checkDataForWin(completeDiag);
+    }
+    const checkBottomLeftToTopRightDiag = (xCoord, yCoord) => {
+      const yIndex = 6 - yCoord;
+      const currentMove = $(`#${yIndex}${xCoord}`);
+      const bottomLeftDiag = createBottomLeftDiagonal(xCoord, yCoord);
+      const topRightDiag = createUpperRightDiagonal(xCoord, yCoord);
+      let completeDiag = bottomLeftDiag.concat(currentMove, topRightDiag);
+      checkDataForWin(completeDiag);
+    }
+    const createUpperLeftDiagonal = (xCoord, yCoord) => {
+      let diagonal = [];
+      const yIndex = 6 - yCoord;
+      let x = xCoord > 3 ? 3 : xCoord;
+      while (x > 0) {
+        const tokenSelector = `#${yIndex + x}${xCoord - x}`;
+        let tokenToAdd = $(tokenSelector);
+        if (tokenToAdd) {
+          diagonal.push(tokenToAdd);
+        } else {
+          diagonal.push("");
+        }
+        // y--;
+        x--;
       }
-    })
+      console.log(diagonal);
+      return diagonal;
+    }
+    const createBottomRightDiagonal = (xCoord, yCoord) => {
+      let diagonal = [];
+      const yIndex = 6 - yCoord;
+      let x = xCoord < 4 ? 3 : 6 - xCoord;
+      while (x > 0) {
+        const tokenSelector = `#${yIndex - x}${xCoord + x}`;
+        let tokenToAdd = $(tokenSelector);
+        if (tokenToAdd) {
+          diagonal.push(tokenToAdd);
+        } else {
+          diagonal.push("");
+        }
+        // y--;
+        x--;
+      }
+      return diagonal.reverse();
+    }
+    const createUpperRightDiagonal = (xCoord, yCoord) => {
+      let diagonal = [];
+      const yIndex = 6 - yCoord;
+      let x = xCoord < 4 ? 3 : 6 - xCoord;
+      while (x > 0) {
+        const tokenSelector = `#${yIndex + x}${xCoord + x}`;
+        let tokenToAdd = $(tokenSelector);
+        if (tokenToAdd) {
+          diagonal.push(tokenToAdd);
+        } else {
+          diagonal.push("");
+        }
+        // y--;
+        x--;
+      }
+      return diagonal.reverse();
+    }
+    const createBottomLeftDiagonal = (xCoord, yCoord) => {
+      let diagonal = [];
+      const yIndex = 6 - yCoord;
+      let x = xCoord > 3 ? 3 : xCoord;
+      while (x > 0) {
+        const tokenSelector = `#${yIndex - x}${xCoord - x}`;
+        let tokenToAdd = $(tokenSelector);
+        if (tokenToAdd) {
+          diagonal.push(tokenToAdd);
+        } else {
+          diagonal.push("");
+        }
+        // y--;
+        x--;
+      }
+      return diagonal;
+    }
+    const checkDataForWin = (dataArray) => {
+      let consecutive = 0;
+      let consecutiveArray = [];
+      dataArray.forEach(token => {
+        let JQToken = $(token);
+        console.log(JQToken.attr('class'));
+        if (JQToken.hasClass(`${this.gameState.currentPlayer}-token`)) {
+          consecutive++;
+          consecutiveArray.push(JQToken);
+        } else {
+          consecutive = 0;
+          consecutiveArray = [];
+        }
+        console.log("consecutive array: ", consecutiveArray);
+        if (consecutive === 4) {
+          winningArray.push(...consecutiveArray);
+          wouldWin = true
+        }
+      })
+    }
+    checkHorizontal(moveY);
+    checkVertical(moveX);
+    checkTopLeftToBottomRightDiag(moveX, moveY);
+    checkBottomLeftToTopRightDiag(moveX, moveY);
+    console.log("would win: ", wouldWin);
+    return {
+      wouldWin: wouldWin,
+      winningArray: winningArray
+    }
   }
   setWinState(winningArray) {
     console.log(this.gameState.currentPlayer);
@@ -206,91 +302,6 @@ class connectFurr {
     this.restart.show();
     // this.connectFurGrid.hide();
     // this.winScreen.show();
-  }
-  checkTopLeftToBottomRightDiag(xCoord, yCoord) {
-    const yIndex = 6 - yCoord;
-    const currentMove = $(`#${yIndex}${xCoord}`);
-    const upperLeftDiag = this.createUpperLeftDiagonal(xCoord, yCoord);
-    const bottomRightDiag = this.createBottomRightDiagonal(xCoord, yCoord);
-    let completeDiag = upperLeftDiag.concat(currentMove, bottomRightDiag);
-    this.checkDataForWin(completeDiag);
-  }
-  checkBottomLeftToTopRightDiag(xCoord, yCoord) {
-    const yIndex = 6 - yCoord;
-    const currentMove = $(`#${yIndex}${xCoord}`);
-    const bottomLeftDiag = this.createBottomLeftDiagonal(xCoord, yCoord);
-    const topRightDiag = this.createUpperRightDiagonal(xCoord, yCoord);
-    let completeDiag = bottomLeftDiag.concat(currentMove, topRightDiag);
-    this.checkDataForWin(completeDiag);
-  }
-  createUpperLeftDiagonal(xCoord, yCoord) {
-    let diagonal = [];
-    const yIndex = 6 - yCoord;
-    let x = xCoord > 3 ? 3 : xCoord;
-    while (x > 0) {
-      const tokenSelector = `#${yIndex + x}${xCoord - x}`;
-      let tokenToAdd = $(tokenSelector);
-      if (tokenToAdd) {
-        diagonal.push(tokenToAdd);
-      } else {
-        diagonal.push("");
-      }
-      // y--;
-      x--;
-    }
-    console.log(diagonal);
-    return diagonal;
-  }
-  createBottomRightDiagonal(xCoord, yCoord) {
-    let diagonal = [];
-    const yIndex = 6 - yCoord;
-    let x = xCoord < 4 ? 3 : 6 - xCoord;
-    while (x > 0) {
-      const tokenSelector = `#${yIndex - x}${xCoord + x}`;
-      let tokenToAdd = $(tokenSelector);
-      if (tokenToAdd) {
-        diagonal.push(tokenToAdd);
-      } else {
-        diagonal.push("");
-      }
-      // y--;
-      x--;
-    }
-    return diagonal.reverse();
-  }
-  createUpperRightDiagonal(xCoord, yCoord) {
-    let diagonal = [];
-    const yIndex = 6 - yCoord;
-    let x = xCoord < 4 ? 3 : 6 - xCoord;
-    while (x > 0) {
-      const tokenSelector = `#${yIndex + x}${xCoord + x}`;
-      let tokenToAdd = $(tokenSelector);
-      if (tokenToAdd) {
-        diagonal.push(tokenToAdd);
-      } else {
-        diagonal.push("");
-      }
-      // y--;
-      x--;
-    }
-    return diagonal.reverse();
-  }
-  createBottomLeftDiagonal(xCoord, yCoord) {
-    let diagonal = [];
-    const yIndex = 6 - yCoord;
-    let x = xCoord > 3 ? 3 : xCoord;
-    while (x > 0) {
-      const tokenSelector = `#${yIndex - x}${xCoord - x}`;
-      let tokenToAdd = $(tokenSelector);
-      if (tokenToAdd) {
-        diagonal.push(tokenToAdd);
-      } else {
-        diagonal.push("");
-      }
-      // y--;
-      x--;
-    }
-    return diagonal;
   }
   backToMenu() {
     this.gameMessages.hide();
