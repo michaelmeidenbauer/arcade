@@ -18,6 +18,10 @@ class connectFurr {
       scores: {
         uno: 0,
         sydney: 0
+      },
+      roles: {
+        player: "uno",
+        ai: "sydney"
       }
     };
     this.sillyMessages = [
@@ -110,6 +114,10 @@ class connectFurr {
     $('#message-connectFur').append(`<h4 id="restart">Play Again (Enter)</h4)`);
     this.restart = $('#restart');
   }
+  tokenClickHandler(){
+    console.log($(this).val());
+    connectFur.addToken(Number($(this).val()));
+  }
   changeActiveCat(currentCat) {
     const uno = $('#uno');
     const sydney = $('#sydney');
@@ -133,7 +141,7 @@ class connectFurr {
     }
   }
   aiCheckTurn(player) {
-    console.log("ai check is running for", player);
+    // console.log("ai check is running for", player);
     let columnToPlay;
     let moveCouldWIn = false;
     for (let i = 0; i < 7; i++) {
@@ -157,22 +165,50 @@ class connectFurr {
     }
   }
   aiMakeMove(){
+    console.log("aiMakeMove");
+    this.gameState.currentPlayer = "sydney";
+    const player = this.gameState.roles.player;
+    const ai = this.gameState.roles.ai;
+    const currentPlayer = this.gameState.currentPlayer;
+
     let {moveCouldWin, columnToPlay} = this.aiCheckTurn('sydney');
     if (moveCouldWin) {
       console.log('sydney would win! play column: ', columnToPlay);
+      this.addToken(columnToPlay);
+      return;
     }
     ({moveCouldWin, columnToPlay} = this.aiCheckTurn('uno'));
     if (moveCouldWin) {
       console.log('uno would win! play column: ', columnToPlay);
+      this.addToken(columnToPlay);
+      return;
+    }
+    const getRandomIndex = () => {
+      return Math.floor(Math.random() * 6);
+    };
+    while (currentPlayer === ai) {
+      const columnToTry = getRandomIndex();
+      const currentColumnData = this.gameState.columnValues[columnToTry];
+      const currentNumTokens = currentColumnData.length;
+      if (currentNumTokens < 6) {
+        this.addToken(columnToTry);
+        this.gameState.currentPlayer = "uno";
+        return;
+      }
     }
   }
   addToken(column) {
-    connectFur.aiMakeMove();
-    if (connectFur.gameState.gameState === "winner") {
+    console.log("addToken");
+    let currentPlayer = connectFur.gameState.currentPlayer;
+    const ai = connectFur.gameState.roles.ai;
+    console.log("current player:", currentPlayer, "ai:", ai);
+    console.log(connectFur.gameState);
+    if (connectFur.gameState.gameState === "winner" || (currentPlayer === ai) ) {
       return;
     }
     $('.top-row').text('');
-    const currentColumn = Number($(this).val());
+    // const currentColumn = Number($(this).val());
+    const currentColumn = column;
     const currentColumnData = connectFur.gameState.columnValues[currentColumn];
     const currentNumTokens = currentColumnData.length;
     const inverted = 6 - currentNumTokens;
@@ -365,13 +401,17 @@ class connectFurr {
           connectFur.backToMenu();
           break;
         case "F6": // F6
-          // console.log(connectFur);
+          console.log(connectFur);
           break;
         case "Enter": // Enter
           // console.log("haii");
           if (connectFur.gameState.gameState === "winner") {
             connectFur.startGame();
           }
+          break;
+          case "F7": // F7
+          connectFur.aiMakeMove();
+          
           break;
         default:
           return; // exit this handler for other keys
@@ -438,7 +478,7 @@ class connectFurr {
       $(slot)
         .addClass(`top-row`)
         .val(counter)
-        .click(this.addToken)
+        .click(this.tokenClickHandler)
         .removeClass("empty-slot")
         .text(clickme[index]);
       counter++;
