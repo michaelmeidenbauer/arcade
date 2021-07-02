@@ -133,7 +133,7 @@ class connectFurr {
     }
   }
   aiCheckTurn(player) {
-    console.log("ai check is running for ", player);
+    console.log("ai check is running for", player);
     let columnToPlay;
     let moveCouldWIn = false;
     for (let i = 0; i < 7; i++) {
