@@ -12,7 +12,7 @@ class connectFurr {
     this.gameOver = this.gameOver.bind(this);
     this.setControls = this.setControls.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
-    this.aiTurn = this.aiTurn.bind(this);
+    this.aiCheckTurn = this.aiCheckTurn.bind(this);
     this.gameState = {
       currentPlayer: 'uno',
       scores: {
@@ -132,39 +132,42 @@ class connectFurr {
       this.messageCopies = [...this.sillyMessages];
     }
   }
-  aiTurn() {
-    console.log("ai turn is running");
-    const topRow = $('.top-row');
-    const randomIndex = Math.ceil(Math.random() * 7);
-    let returnWouldWin = false;
-    let returnWinningArray = [];
+  aiCheckTurn(player) {
+    console.log("ai check is running for ", player);
     let columnToPlay;
+    let moveCouldWIn = false;
     for (let i = 0; i < 7; i++) {
       const currentColumn = i;
       const currentColumnData = connectFur.gameState.columnValues[currentColumn];
       const currentNumTokens = currentColumnData.length;
       const inverted = 6 - currentNumTokens;
       const coords = [inverted, currentColumn];
-      const { wouldWin, winningArray } = this.checkMove(coords, true);
-      console.log(`{
-        wouldWin: ${wouldWin},
-        winningArray: ${winningArray},
-        columnToPlay: ${currentColumn}
-      }`);
+      const { wouldWin } = this.checkMove(coords, player, true);
       if (wouldWin) {
-        console.log(`{
-          wouldWin: ${wouldWin},
-          winningArray: ${winningArray},
-          columnToPlay: ${columnToPlay}
-        }`)
+        columnToPlay = currentColumn;
+        moveCouldWIn = wouldWin;
         break;
       } else {
        continue;
       }
     }
+    return {
+      moveCouldWin: moveCouldWIn,
+      columnToPlay: columnToPlay
+    }
   }
-  addToken() {
-    connectFur.aiTurn();
+  aiMakeMove(){
+    let {moveCouldWin, columnToPlay} = this.aiCheckTurn('sydney');
+    if (moveCouldWin) {
+      console.log('sydney would win! play column: ', columnToPlay);
+    }
+    ({moveCouldWin, columnToPlay} = this.aiCheckTurn('uno'));
+    if (moveCouldWin) {
+      console.log('uno would win! play column: ', columnToPlay);
+    }
+  }
+  addToken(column) {
+    connectFur.aiMakeMove();
     if (connectFur.gameState.gameState === "winner") {
       return;
     }
@@ -182,7 +185,7 @@ class connectFurr {
       currentColumnData.push(connectFur.gameState.currentPlayer);
       $(tokenToAdd).addClass(catClassToAdd);
     }
-    const { wouldWin, winningArray } = connectFur.checkMove(coords);
+    const { wouldWin, winningArray } = connectFur.checkMove(coords, connectFur.gameState.currentPlayer);
     if (wouldWin) {
       connectFur.setWinState(winningArray);
     }
@@ -193,15 +196,17 @@ class connectFurr {
       connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
     }
   }
-  checkMove(currentMove, thing) {
-    if (thing) {
-      console.log("reached from aiTurn function");
-    }
+  checkMove(currentMove, player, aiMove) {
     let winningArray = [];
     let wouldWin = false;
+    const JQElementPlaceHolder = $(`<div class='${player}-token'></div>`);
     const [moveY, moveX] = currentMove;
     const checkHorizontal = yCoord => {
-      let rowData = this.rows[yCoord];
+      const rowData = [...this.rows[yCoord]];
+      if (aiMove) {
+        rowData.splice(moveX, 1, JQElementPlaceHolder);
+        // console.log("ai rows: ", rowData);
+      }
       // console.log(rowData);
       checkDataForWin(rowData);
     }
@@ -209,14 +214,17 @@ class connectFurr {
       let currentColumn = [];
       // console.log(this.rows);
       for (const row of this.rows) {
-        currentColumn.push(row[xCoord])
+        currentColumn.push(row[xCoord]);
+      }
+      if (aiMove) {
+        currentColumn.splice(moveY, 1, JQElementPlaceHolder);
       }
       // console.log(currentColumn);
       checkDataForWin(currentColumn);
     }
     const checkTopLeftToBottomRightDiag = (xCoord, yCoord) => {
       const yIndex = 6 - yCoord;
-      const currentMove = $(`#${yIndex}${xCoord}`);
+      const currentMove = aiMove ? JQElementPlaceHolder : $(`#${yIndex}${xCoord}`);
       const upperLeftDiag = createUpperLeftDiagonal(xCoord, yCoord);
       const bottomRightDiag = createBottomRightDiagonal(xCoord, yCoord);
       let completeDiag = upperLeftDiag.concat(currentMove, bottomRightDiag);
@@ -224,7 +232,7 @@ class connectFurr {
     }
     const checkBottomLeftToTopRightDiag = (xCoord, yCoord) => {
       const yIndex = 6 - yCoord;
-      const currentMove = $(`#${yIndex}${xCoord}`);
+      const currentMove = aiMove ? JQElementPlaceHolder : $(`#${yIndex}${xCoord}`);
       const bottomLeftDiag = createBottomLeftDiagonal(xCoord, yCoord);
       const topRightDiag = createUpperRightDiagonal(xCoord, yCoord);
       let completeDiag = bottomLeftDiag.concat(currentMove, topRightDiag);
@@ -305,7 +313,7 @@ class connectFurr {
       dataArray.forEach(token => {
         let JQToken = $(token);
         // console.log(JQToken.attr('class'));
-        if (JQToken.hasClass(`${this.gameState.currentPlayer}-token`)) {
+        if (JQToken.hasClass(`${player}-token`)) {
           consecutive++;
           consecutiveArray.push(JQToken);
         } else {
