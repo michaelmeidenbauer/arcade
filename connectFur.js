@@ -114,7 +114,12 @@ class connectFurr {
     $('#message-connectFur').append(`<h4 id="restart">Play Again (Enter)</h4)`);
     this.restart = $('#restart');
   }
-  tokenClickHandler(){
+  tokenClickHandler() {
+    let currentPlayer = connectFur.gameState.currentPlayer;
+    const ai = connectFur.gameState.roles.ai;
+    if (connectFur.gameState.gameState === "winner" || (currentPlayer === ai)) {
+      return;
+    }
     console.log($(this).val());
     connectFur.addToken(Number($(this).val()));
   }
@@ -156,7 +161,7 @@ class connectFurr {
         moveCouldWIn = wouldWin;
         break;
       } else {
-       continue;
+        continue;
       }
     }
     return {
@@ -164,20 +169,20 @@ class connectFurr {
       columnToPlay: columnToPlay
     }
   }
-  aiMakeMove(){
+  aiMakeMove() {
     console.log("aiMakeMove");
     this.gameState.currentPlayer = "sydney";
     const player = this.gameState.roles.player;
     const ai = this.gameState.roles.ai;
     const currentPlayer = this.gameState.currentPlayer;
 
-    let {moveCouldWin, columnToPlay} = this.aiCheckTurn('sydney');
+    let { moveCouldWin, columnToPlay } = this.aiCheckTurn('sydney');
     if (moveCouldWin) {
       console.log('sydney would win! play column: ', columnToPlay);
       this.addToken(columnToPlay);
       return;
     }
-    ({moveCouldWin, columnToPlay} = this.aiCheckTurn('uno'));
+    ({ moveCouldWin, columnToPlay } = this.aiCheckTurn('uno'));
     if (moveCouldWin) {
       console.log('uno would win! play column: ', columnToPlay);
       this.addToken(columnToPlay);
@@ -186,26 +191,19 @@ class connectFurr {
     const getRandomIndex = () => {
       return Math.floor(Math.random() * 6);
     };
-    while (currentPlayer === ai) {
-      const columnToTry = getRandomIndex();
-      const currentColumnData = this.gameState.columnValues[columnToTry];
-      const currentNumTokens = currentColumnData.length;
-      if (currentNumTokens < 6) {
-        this.addToken(columnToTry);
-        this.gameState.currentPlayer = "uno";
-        return;
-      }
+    let columnToTry = getRandomIndex();
+    let currentColumnData = this.gameState.columnValues[columnToTry];
+    let currentNumTokens = currentColumnData.length;
+    while (currentNumTokens === 6) {
+      columnToTry = getRandomIndex();
     }
+    this.addToken(columnToTry);
   }
   addToken(column) {
     console.log("addToken");
-    let currentPlayer = connectFur.gameState.currentPlayer;
-    const ai = connectFur.gameState.roles.ai;
-    console.log("current player:", currentPlayer, "ai:", ai);
-    console.log(connectFur.gameState);
-    if (connectFur.gameState.gameState === "winner" || (currentPlayer === ai) ) {
-      return;
-    }
+    
+    // console.log("current player:", currentPlayer, "ai:", ai);
+    // console.log(connectFur.gameState);
     $('.top-row').text('');
     // const currentColumn = Number($(this).val());
     const currentColumn = column;
@@ -409,9 +407,9 @@ class connectFurr {
             connectFur.startGame();
           }
           break;
-          case "F7": // F7
+        case "F7": // F7
           connectFur.aiMakeMove();
-          
+
           break;
         default:
           return; // exit this handler for other keys
