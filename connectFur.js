@@ -169,9 +169,14 @@ class connectFurr {
       columnToPlay: columnToPlay
     }
   }
-  aiMakeMove() {
+  async arbitraryLengthDelay() {
+    const randomDelay = Math.ceil(Math.random() * 2500);
+    return new Promise((resolve) => setTimeout(resolve, randomDelay));
+  }
+  async aiMakeMove() {
     console.log("aiMakeMove");
-    this.gameState.currentPlayer = "sydney";
+    const randomDelay = await this.arbitraryLengthDelay();
+    // this.gameState.currentPlayer = "sydney";
     const player = this.gameState.roles.player;
     const ai = this.gameState.roles.ai;
     const currentPlayer = this.gameState.currentPlayer;
@@ -179,29 +184,35 @@ class connectFurr {
     let { moveCouldWin, columnToPlay } = this.aiCheckTurn('sydney');
     if (moveCouldWin) {
       console.log('sydney would win! play column: ', columnToPlay);
-      this.addToken(columnToPlay);
-      return;
+      const currentNumTokens = this.gameState.columnValues[columnToPlay].length;
+      if (currentNumTokens < 6) {
+        this.addToken(columnToPlay);
+        return;
+      }
     }
     ({ moveCouldWin, columnToPlay } = this.aiCheckTurn('uno'));
     if (moveCouldWin) {
       console.log('uno would win! play column: ', columnToPlay);
-      this.addToken(columnToPlay);
-      return;
+      const currentNumTokens = this.gameState.columnValues[columnToPlay].length;
+      if (currentNumTokens < 6) {
+        this.addToken(columnToPlay);
+        return;
+      }
     }
     const getRandomIndex = () => {
       return Math.floor(Math.random() * 6);
     };
     let columnToTry = getRandomIndex();
-    let currentColumnData = this.gameState.columnValues[columnToTry];
-    let currentNumTokens = currentColumnData.length;
+    let currentNumTokens = this.gameState.columnValues[columnToTry].length;
     while (currentNumTokens === 6) {
       columnToTry = getRandomIndex();
+      currentNumTokens = this.gameState.columnValues[columnToTry].length;
     }
     this.addToken(columnToTry);
   }
   addToken(column) {
     console.log("addToken");
-    
+
     // console.log("current player:", currentPlayer, "ai:", ai);
     // console.log(connectFur.gameState);
     $('.top-row').text('');
