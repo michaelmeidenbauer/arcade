@@ -76,6 +76,7 @@ class connectFurr {
       this.rows = this.getRows();
     }
     $('#message-connectFur h1').text("CONNECT FUR");
+    this.gameState.numAiMoves = 0;
     this.gameState.currentPlayer = "uno";
     this.restart.hide();
     $('.sydney-token, .uno-token')
@@ -120,7 +121,6 @@ class connectFurr {
     if (connectFur.gameState.gameState === "winner" || (currentPlayer === ai)) {
       return;
     }
-    console.log($(this).val());
     connectFur.addToken(Number($(this).val()));
   }
   changeActiveCat(currentCat) {
@@ -145,7 +145,7 @@ class connectFurr {
       this.messageCopies = [...this.sillyMessages];
     }
   }
-  aiCheckTurn(player) {
+  aiCheckTurn(player, oneMoveAhead) {
     // console.log("ai check is running for", player);
     let columnToPlay;
     let moveCouldWIn = false;
@@ -153,7 +153,7 @@ class connectFurr {
       const currentColumn = i;
       const currentColumnData = connectFur.gameState.columnValues[currentColumn];
       const currentNumTokens = currentColumnData.length;
-      const inverted = 6 - currentNumTokens;
+      const inverted = (oneMoveAhead && currentNumTokens > 0) ? 7 - currentNumTokens : 6 - currentNumTokens;
       const coords = [inverted, currentColumn];
       const { wouldWin } = this.checkMove(coords, player, true);
       if (wouldWin) {
@@ -204,10 +204,21 @@ class connectFurr {
     };
     let columnToTry = getRandomIndex();
     let currentNumTokens = this.gameState.columnValues[columnToTry].length;
-    while (currentNumTokens === 6) {
-      columnToTry = getRandomIndex();
-      currentNumTokens = this.gameState.columnValues[columnToTry].length;
+    //Always play an empty column on one of the first two AI moves to prevent an easy horizontal win for the human player.
+    if (this.gameState.numAiMoves < 2) {
+      while (currentNumTokens > 0) {
+        columnToTry = getRandomIndex();
+        currentNumTokens = this.gameState.columnValues[columnToTry].length;
+      }
+    } else {
+      //Check turn with oneMoveAhead param set to true to see if any move would set up the human player for a win and randomize to pick any non-full column that wouldn't give the human player a win.
+      ({ moveCouldWin, columnToPlay } = this.aiCheckTurn('uno', true));
+      while (currentNumTokens === 6 || columnToTry === columnToPlay) {
+        columnToTry = getRandomIndex();
+        currentNumTokens = this.gameState.columnValues[columnToTry].length;
+      }
     }
+    this.gameState.numAiMoves++;
     this.addToken(columnToTry);
   }
   addToken(column) {
@@ -418,7 +429,7 @@ class connectFurr {
             connectFur.startGame();
           }
           break;
-        case "F7": // F7
+        case " ": // Spacebar
           connectFur.aiMakeMove();
 
           break;
