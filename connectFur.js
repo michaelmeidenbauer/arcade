@@ -170,7 +170,7 @@ class connectFurr {
     }
   }
   async arbitraryLengthDelay() {
-    const randomDelay = Math.ceil(Math.random() * 2500);
+    const randomDelay = Math.random() * 4000;
     return new Promise((resolve) => setTimeout(resolve, randomDelay));
   }
   async aiMakeMove() {
@@ -223,11 +223,7 @@ class connectFurr {
   }
   addToken(column) {
     console.log("addToken");
-
-    // console.log("current player:", currentPlayer, "ai:", ai);
-    // console.log(connectFur.gameState);
     $('.top-row').text('');
-    // const currentColumn = Number($(this).val());
     const currentColumn = column;
     const currentColumnData = connectFur.gameState.columnValues[currentColumn];
     const currentNumTokens = currentColumnData.length;
@@ -245,11 +241,13 @@ class connectFurr {
     if (wouldWin) {
       connectFur.setWinState(winningArray);
     }
-
     if (connectFur.gameState.gameState != "winner") {
       connectFur.changeActiveCat(connectFur.gameState.currentPlayer);
       connectFur.getSillyMessage();
       connectFur.gameState.currentPlayer = connectFur.gameState.currentPlayer === 'uno' ? 'sydney' : 'uno';
+      if (connectFur.gameState.currentPlayer === connectFur.gameState.roles.ai){
+        connectFur.aiMakeMove();
+      }
     }
   }
   checkMove(currentMove, player, aiMove) {
@@ -429,10 +427,12 @@ class connectFurr {
             connectFur.startGame();
           }
           break;
-        case " ": // Spacebar
-          connectFur.aiMakeMove();
+        // case " ": // Spacebar
+        // if (connectFur.gameState.currentPlayer === connectFur.gameState.roles.ai)  {
+        //   connectFur.aiMakeMove();
+        // }
 
-          break;
+        //   break;
         default:
           return; // exit this handler for other keys
       }
