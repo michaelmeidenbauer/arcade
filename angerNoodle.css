@@ -29,6 +29,19 @@
    color: white;
    border-width: .5vw;
 }
+.orange {
+    background-image: url("assets/portal-orange.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.blue {
+    background-image: url("assets/portal-blue.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.portal {
+    color: transparent;
+}
 .segment {
     background-color: transparent;
 }
