@@ -194,7 +194,6 @@ class angerNoodler {
         [10, 8],
       ],
       portal: {
-        allowed: false,
         isOpen: false
       },
       direction: "right",
@@ -417,10 +416,10 @@ class angerNoodler {
     this.lavaButton.click(this.wallsAreLavaSwitcher);
     this.portalButton.click(() => {
       this.gameState.portal.allowed = !this.gameState.portal.allowed;
-      if ($(this.portalButton).hasClass('portal-button-active')){
-        this.portalButton.removeClass('portal-button-active');
-      } else {
+      if (this.gameState.portal.allowed){
         this.portalButton.addClass('portal-button-active');
+      } else {
+        this.portalButton.removeClass('portal-button-active');
       }
     });
     this.menuButton.click(this.backToMenu);
