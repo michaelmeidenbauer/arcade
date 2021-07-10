@@ -1,3 +1,8 @@
+@keyframes portalBlink {
+    0% {background-color: blue;}
+    50% {background-color: orange;}
+    100% {background-color: blue;}
+}
 #anger-noodle {
     height: 10vh;
     width: auto;
@@ -28,6 +33,15 @@
    background-color: black;
    color: white;
    border-width: .5vw;
+}
+#portal-button {
+   font-size: large;
+   background-color: black;
+   color: white;
+   border-width: .5vw;
+}
+.portal-button-active {
+    animation: portalBlink 4s infinite linear;
 }
 .orange {
     background-image: url("assets/portal-orange.png");
@@ -102,8 +116,9 @@
     display: flex;
     flex-direction: row;
     align-content: center;
-    justify-content: center;
-    margin-top: 1%;;
+    justify-content: space-evenly;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 .pause-head {
     border: red solid 3px;

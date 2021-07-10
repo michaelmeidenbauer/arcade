@@ -122,6 +122,9 @@ class angerNoodler {
             <button id="lava-button">
             💀 Walls are lava 💀
             </button>
+            <button id="portal-button">
+            Portals 
+            </button>
             </div>
     `);
     $('.controls-explainer').append(`
@@ -136,6 +139,7 @@ class angerNoodler {
     this.message = $('.message');
     this.message.text('"must destroy other kitteh"');
     this.lavaButton = $("#lava-button");
+    this.portalButton = $("#portal-button");
     this.menuButton = $("#back-to-menu");
     this.controls = $('.anger-noodle-controls');
     this.gameMessages = $('.anger-noodle-message');
@@ -190,6 +194,7 @@ class angerNoodler {
         [10, 8],
       ],
       portal: {
+        allowed: false,
         isOpen: false
       },
       direction: "right",
@@ -410,6 +415,14 @@ class angerNoodler {
   setInputs() {
     this.speedSlider.on("input", this.updateTickRate);
     this.lavaButton.click(this.wallsAreLavaSwitcher);
+    this.portalButton.click(() => {
+      this.gameState.portal.allowed = !this.gameState.portal.allowed;
+      if ($(this.portalButton).hasClass('portal-button-active')){
+        this.portalButton.removeClass('portal-button-active');
+      } else {
+        this.portalButton.addClass('portal-button-active');
+      }
+    });
     this.menuButton.click(this.backToMenu);
   }
   gameOver() {
@@ -446,7 +459,9 @@ class angerNoodler {
     }
     this.updateScore();
     this.makeTreat();
-    this.rollForPortal();
+    if (this.gameState.portal.allowed) {
+      this.rollForPortal();
+    }
   }
   playPause() {
     console.log(this.gameState.gameState);
