@@ -36,6 +36,7 @@ class angerNoodler {
     this.setControls = this.setControls.bind(this);
     this.wallsAreLavaSwitcher = this.wallsAreLavaSwitcher.bind(this);
     this.backToMenu = this.backToMenu.bind(this);
+    this.openPortals = this.openPortals.bind(this);
   }
   startGame() {
     $('.main-menu').hide();
@@ -121,6 +122,9 @@ class angerNoodler {
             <button id="lava-button">
             💀 Walls are lava 💀
             </button>
+            <button id="portal-button">
+            Portals 
+            </button>
             </div>
     `);
     $('.controls-explainer').append(`
@@ -135,6 +139,7 @@ class angerNoodler {
     this.message = $('.message');
     this.message.text('"must destroy other kitteh"');
     this.lavaButton = $("#lava-button");
+    this.portalButton = $("#portal-button");
     this.menuButton = $("#back-to-menu");
     this.controls = $('.anger-noodle-controls');
     this.gameMessages = $('.anger-noodle-message');
@@ -188,6 +193,9 @@ class angerNoodler {
         [10, 7],
         [10, 8],
       ],
+      portal: {
+        isOpen: false
+      },
       direction: "right",
       gridSize: 15,
       tickRate: 100,
@@ -251,31 +259,76 @@ class angerNoodler {
       currentSegment.addClass(`segment ${this.gameState.direction}`);
     }
   }
+  rollForPortal() {
+    const getRandomIndex = () => {
+      return Math.floor(Math.random() * 5);
+    };
+    const chance = getRandomIndex();
+    if (!this.gameState.portal.isOpen && chance === 2) {
+      this.openPortals();
+      this.gameState.portal.isOpen = true;
+    }
+  }
+  openPortals() {
+    const notSnakeOrTreatCells = $(".cell:not(.segment, .treat)");
+    const getRandomIndex = () => {
+      return Math.floor(Math.random() * notSnakeOrTreatCells.length);
+    };
+    const orangeIndex = getRandomIndex();
+    let blueIndex = getRandomIndex();
+    while (orangeIndex === blueIndex) {
+      blueIndex = getRandomIndex();
+    }
+    $(notSnakeOrTreatCells[orangeIndex]).addClass('portal orange');
+    $(notSnakeOrTreatCells[blueIndex]).addClass('portal blue');
+    this.gameState.portal.blue = this.getCoords('blue');
+    this.gameState.portal.orange = this.getCoords('orange');
+  }
+  getCoords(targetClass) {
+    let returnCoords = null;
+    [...this.rows].forEach((row, index) => {
+      const rowIndex = index;
+      row.forEach((cell, index) => {
+        if ($(cell).hasClass(`${targetClass}`)) {
+          returnCoords = [rowIndex, index];
+        }
+      })
+    })
+    return returnCoords;
+  }
+  changeDirection(headPosition) {
+    const [headX, headY] = headPosition;
+    let newHeadPosition;
+    const boundary = this.gameState.boundary;
+    switch (this.gameState.direction) {
+      case "up":
+        return newHeadPosition = headX != 0 ? [headX - 1, headY] : [boundary, headY];
+      case "down":
+        return newHeadPosition = headX != boundary ? [headX + 1, headY] : [0, headY];
+      case "left":
+        return newHeadPosition = headY != 0 ? [headX, headY - 1] : [headX, boundary];
+      case "right":
+        return newHeadPosition = headY != boundary ? [headX, headY + 1] : [headX, 0];
+      default:
+        break;
+    }
+  }
   move() {
     if (this.gameState.shouldDeleteTail) {
       this.removeTail();
     } else {
       this.gameState.shouldDeleteTail = true;
     }
-    const [headX, headY] = this.gameState.head;
     let newHeadPosition;
-    let boundary = this.gameState.boundary;
-    switch (this.gameState.direction) {
-      case "up":
-        newHeadPosition = headX != 0 ? [headX - 1, headY] : [boundary, headY];
-        break;
-      case "down":
-        newHeadPosition = headX != boundary ? [headX + 1, headY] : [0, headY];
-        break;
-      case "left":
-        newHeadPosition = headY != 0 ? [headX, headY - 1] : [headX, boundary];
-        break;
-      case "right":
-        newHeadPosition = headY != boundary ? [headX, headY + 1] : [headX, 0];
-        break;
-
-      default:
-        break;
+    const [headPositionY, headPositionX] = this.gameState.head;
+    const headCell = $(this.rows[headPositionY][headPositionX]);
+    if (headCell.hasClass('portal')){
+      //get the coords of the other portal and feed them into changeDirection
+      newHeadPosition = headCell.hasClass('orange') ? this.gameState.portal.blue : this.gameState.portal.orange;
+      $('.cell').removeClass('portal');
+      this.gameState.portal.isOpen = false;
+    } else {
+      newHeadPosition = this.changeDirection(this.gameState.head);
     }
     // console.log(`head: ${head}, next: ${newHeadPosition}`);
     this.checkNextMove(newHeadPosition);
@@ -348,6 +401,10 @@ class angerNoodler {
           console.log(angerNoodle);
           break;
 
+          case "F7": // F7
+          angerNoodle.openPortals();
+          break;
+
         default:
           return; // exit this handler for other keys
       }
@@ -357,6 +414,14 @@ class angerNoodler {
   setInputs() {
     this.speedSlider.on("input", this.updateTickRate);
     this.lavaButton.click(this.wallsAreLavaSwitcher);
+    this.portalButton.click(() => {
+      this.gameState.portal.allowed = !this.gameState.portal.allowed;
+      if (this.gameState.portal.allowed){
+        this.portalButton.addClass('portal-button-active');
+      } else {
+        this.portalButton.removeClass('portal-button-active');
+      }
+    });
     this.menuButton.click(this.backToMenu);
   }
   gameOver() {
@@ -393,6 +458,9 @@ class angerNoodler {
     }
     this.updateScore();
     this.makeTreat();
+    if (this.gameState.portal.allowed) {
+      this.rollForPortal();
+    }
   }
   playPause() {
     console.log(this.gameState.gameState);
